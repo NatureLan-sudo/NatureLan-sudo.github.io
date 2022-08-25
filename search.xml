@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>关于我</title>
-    <url>/2022/08/25/hello-world/</url>
+    <url>/2022/08/25/%E5%85%B3%E4%BA%8E%E6%88%91/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
 <span id="more"></span>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
@@ -20,6 +20,22 @@
 ]]></content>
       <categories>
         <category>个人信息</category>
+      </categories>
+      <tags>
+        <tag>About me</tag>
+        <tag>c++</tag>
+        <tag>SLAM</tag>
+        <tag>Eigen</tag>
+        <tag>G2o</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>视觉SLAM十四讲——第二讲</title>
+    <url>/2022/08/25/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E2%80%94%E2%80%94%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
+    <content><![CDATA[<p>这是一篇试用的内容。</p>
+<span id="more"></span>]]></content>
+      <categories>
+        <category>视觉SLAM</category>
       </categories>
       <tags>
         <tag>About me</tag>
