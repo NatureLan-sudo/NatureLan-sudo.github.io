@@ -1,46 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>关于我</title>
-    <url>/2022/08/25/%E5%85%B3%E4%BA%8E%E6%88%91/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+    <title>视觉SLAM十四讲-第二讲：初识SLAM</title>
+    <url>/2022/08/26/%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
+    <content><![CDATA[<p>本文主要介绍视觉SLAM十四讲中第二讲的关键内容。</p>
 <span id="more"></span>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h2 id="第二讲：初识SLAM"><a href="#第二讲：初识SLAM" class="headerlink" title="第二讲：初识SLAM"></a>第二讲：初识SLAM</h2><p>一类传感器是<strong>携带于机器人本体上</strong>的，例如机器人的轮式编码器、相机、激光等等 ——通过间接测量数据推算位置，好处是对环境没有提出要求，适用于位置环境。</p>
+<p>一类是<strong>安装于环境中</strong>的，例如前面讲的导轨、二维码标志等等。   —— 约束了外界环境，限制了使用范围</p>
+<blockquote>
+<p>📌</p>
+<p><strong>单目相机</strong>是三维空间的二维投影，因此，如果想恢复三维结构，必须移动相机的视角。</p>
+<p>因此，<strong>单目相机平移之后才能计算深度，并且无法确定真实尺度</strong>，问题的本质在于通过单张图像无法确定深度。</p>
+</blockquote>
+<blockquote>
+<p>📌<strong>双目相机</strong>和<strong>深度相机</strong>，目的在于通过某种手段测量物体距离我们的距离，回复距离信息，因此场景的三维结构可以通过单张图线回复，也就消除了尺度不确定性。</p>
+<p>双目相机测量到的深度范围与基线相关。基线距离越大，能够测量到的就越远</p>
+<p><strong>双目或多目相机的缺点</strong>是配置与标定均较为复杂，其深度量程和精度受双目的基线与分辨率限制，而且视差的计算非常消耗计算资源</p>
+<p><strong>深度相机</strong>（又称 RGB-D 相机)右开始兴起的一种相机，它最大的特点是可以通过红外结构光或 Time-of-Flight（ToF）原理，像激光传感器那样，通过主动向物体发射光并接收返回的光，测出物体离相机的距离。<strong>区别于双目相机是采用计算的方式获得深度，深度相机是通过物理方式，避免了大量的计算。</strong></p>
+</blockquote>
+<p>视觉里程计只计算相邻时刻的运动，而和再往前的过去的信息没有关联。仅通过视觉里程计估计轨迹，将不可避免的出现累积漂移。每次估计都会有一定的误差，由于里程计只估计相邻时刻的运动，先前时刻的误差将会传递到下一时刻，导致一段时间后估计的轨迹不再准确。</p>
+<p>后端优化主要指处理 SLAM 过程中噪声的问题。后端优化要考虑的问题，就是如何从这些带有噪声的数据中，估计整个系统的状态，以及这个状态估计的不确定性有多大——这称为最大后验概率估（Maximum-a-Posteriori，MAP）。</p>
+<p>为了实现回环检测，我们需要让机器人具有识别曾到达过的场景的能力。</p>
+<blockquote>
+<p>📌<strong>SLAM问题的数学表述</strong></p>
+<p><img data-src="https://s2.loli.net/2022/08/26/HR8BbFdckGSAUpP.png" alt="SLAM运动和观测方程.png"></p>
+<p>方程1是运动方程，方程2是观测方程</p>
+<p>其中uk代表传感器输入，z代表传感器观测，y代表路标。</p>
+<p>运动方程:  相机是六自由度姿态，两次位姿之间的关系相差一个旋转矩阵。</p>
+<p>观测方程：z是在xk位置观测到yj所产生的观测数据。例如，在xk看到一个特征点，获得他的像素坐标[u,v]，由三维空间点获得像素坐标，这是<strong>相机模型。</strong></p>
+</blockquote>
 ]]></content>
       <categories>
-        <category>个人信息</category>
+        <category>视觉SLAM</category>
       </categories>
       <tags>
-        <tag>About me</tag>
-        <tag>c++</tag>
         <tag>SLAM</tag>
-        <tag>Eigen</tag>
-        <tag>G2o</tag>
       </tags>
   </entry>
   <entry>
     <title>视觉SLAM十四讲——第二讲</title>
     <url>/2022/08/25/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E2%80%94%E2%80%94%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
-    <content><![CDATA[<p>这是一篇试用的内容。</p>
+    <content><![CDATA[<p>这是一篇待补充的内容</p>
 <span id="more"></span>]]></content>
       <categories>
         <category>视觉SLAM</category>
       </categories>
       <tags>
+        <tag>SLAM</tag>
         <tag>About me</tag>
         <tag>c++</tag>
-        <tag>SLAM</tag>
         <tag>Eigen</tag>
         <tag>G2o</tag>
       </tags>
