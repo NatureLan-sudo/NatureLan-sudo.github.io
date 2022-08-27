@@ -53,4 +53,27 @@
         <tag>G2o</tag>
       </tags>
   </entry>
+  <entry>
+    <title>解决typora提示:This beta version of Typora is expired</title>
+    <url>/2022/08/27/%E8%A7%A3%E5%86%B3typora%E6%8F%90%E7%A4%BAThis%20beta%20version%20of%20Typora%20is%20expired/</url>
+    <content><![CDATA[<p>解决typora提示This beta version of Typora is expired, please download and install a newer version<br>自从typora付费之后也没有怎么使用，后来做git仓库+picgo+typora联动的时候，再次打开typora，弹出了以下窗口：</p>
+<span id="more"></span>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271020322.png" alt="ERROR提示"></p>
+<p>我重新下载了付费版本的typora然后然后开启了15天尝鲜。但是我发现之后再想用typora打开md文档的时候依然会出现这个提示框，并且无论是点击确定还是×掉都依然会跳转到typora的安装界面。</p>
+<p>这个错误提示大概的意思就是beta版本的typora已经过，需要下载最新版本。</p>
+<p>在网上查找了一圈解决办法，目前通过修改注册表解决了我的问题。</p>
+<p>以下是解决步骤：</p>
+<p>1、win+r 打开运行窗口 &amp;#x20;<br>2、在搜索栏输入regedit，回车后打开注册表 &amp;#x20;<br>3、在注册表中找到：计算机\HKEY_CURRENT_USER\Software\Typora &amp;#x20;<br>4、鼠标右键Typora，选择权限 &amp;#x20;<br>5、选择Administraors，将下面的权限选择为拒绝</p>
+<p>点击应用的时候可能会出现提醒，点确定就行了。最后保存设置。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271021324.png" alt="修改typora权限"></p>
+<p>6、重新打开typora，就可以正常应用了。</p>
+<p>以上就是问题的解决方法。</p>
+]]></content>
+      <categories>
+        <category>一些奇奇怪怪的问题之windows</category>
+      </categories>
+      <tags>
+        <tag>typora</tag>
+      </tags>
+  </entry>
 </search>
