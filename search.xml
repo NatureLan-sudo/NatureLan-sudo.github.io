@@ -1,6 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>视觉SLAM十四讲-第三讲：三维空间刚体运动</title>
+    <url>/2022/08/28/%E7%AC%AC%E4%B8%89%E8%AE%B2/</url>
+    <content><![CDATA[<h2 id="第三讲：三维空间刚体运动"><a href="#第三讲：三维空间刚体运动" class="headerlink" title="第三讲：三维空间刚体运动"></a>第三讲：三维空间刚体运动</h2><p><strong>利用旋转+平移描述三维空间刚体的运动</strong></p>
+<span id="more"></span>
+
+<p>向量在一个坐标系下的坐标表示：</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262321796.png"></p>
+<p>即在以基底为（e1,e2,e3）的坐标系下，向量的坐标为（a1,a2,a3）</p>
+<blockquote>
+<p>📌向量的内积，即向量的点乘。描述了两个向量间的投影关系，</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262321495.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262321030.png"></p>
+</blockquote>
+<blockquote>
+<p>📌向量的外积，即向量的叉乘。得到了第三个向量，这个向量，垂直于这两个向量。</p>
+<p>这个关系描述子向量间的旋转</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262321232.png"></p>
+<p>其中n是a和b构成的平面的单位向量</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262321246.png"></p>
+<p>外积只对三维向量存在定义。</p>
+<p>上式中的定义，将外积转化为了矩阵的乘法，也是成立的。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262321069.png"></p>
+<p>在旋转向量的方向就是a x b的方向，大小由ab的夹角决定。 右手法则，攥住旋转轴，手指的旋转方向就是旋转方向，大小就是这个旋转向量的大小。因此，由向量的外积可以表示一个旋转，一个轴代表方向，一个夹角，后面会引入旋转向量。</p>
+</blockquote>
+<blockquote>
+<p>📌<strong>坐标系间的欧式变换</strong></p>
+<p>相机运动是一个刚体运动，<strong>它保证了同一个向量在各个坐标系下的长度和夹角都不会</strong></p>
+<p>发生变化。这种变换称为欧氏变换。</p>
+<p><strong>这种变换最大的特点就是改变物体的空间位置但是不改变物体的形状、大小，即不改变向量的方向和大小。</strong></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262321564.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262321019.png"></p>
+<p>旋转矩阵是行列式为1的正交矩阵，正交矩阵是本身转置等于本身逆的矩阵。</p>
+<p>旋转矩阵的逆描述了一个相反的旋转。</p>
+<hr>
+<p>因为平移向量的存在，这里的变换不是一个 线性关系，因此引入齐次坐标，重写得到<strong>变化矩阵</strong></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262321926.png"></p>
+<p>在三维向量的末尾添加一个1，变成四维向量，称为齐次坐标。这是一种数学技巧，这允许我们将变换变成了一个线性变换。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262321055.png"></p>
+<p><strong>同样，T的逆变换也代表相反的变换。</strong> 变换矩阵属于特殊的欧式群，区别于旋转矩阵，不存在转置等于逆变换。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262321282.png"></p>
+<p>自己的推导证明如下：</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262321393.jpg"></p>
+<p>变换矩阵的逆矩阵R部分直接转置，但是t部分不能直接加一个负号。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262321727.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322743.png"></p>
+<p>t在求逆后不是一个单纯的负号，是因为逆变换的过程中参考系发生了变化。默认SLAM，先旋转再平移，则，Tab，Rab旋转后，在平移tab，这里tab参考的是Rab旋转后的坐标系，即虚线表示的坐标系。反过来，B旋转Rba，即Rab的转置（逆），这里的状态是与A坐标系差一个平移tba。tab的参考系是Rab点乘A，但现在的参考系是Rba点乘B，所以要将tab变换到Rba点乘B下面，在进行负变换，因此对-tab做成Rab的转置（逆）。</p>
+<p>再从运算的角度进行分析：</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322432.png"></p>
+<p>变换的合成是不断的左乘位姿变换矩阵。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322374.png"></p>
+<p>APE，绝对位姿误差：每个时刻的位姿和真实位姿之间的误差计算。</p>
+<p>RPE，相对位姿误差：相邻时刻的相对位姿变化与真实相对位姿变换间的误差</p>
+<p>有关RPE和APE可以进一步参考</p>
+<p><a href="http://zhaoxuhui.top/blog/2021/05/14/APE-RPE-ATE-RTE-Mmetric-in-SLAM.html" title="http://zhaoxuhui.top/blog/2021/05/14/APE-RPE-ATE-RTE-Mmetric-in-SLAM.html">http://zhaoxuhui.top/blog/2021/05/14/APE-RPE-ATE-RTE-Mmetric-in-SLAM.html</a></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322658.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322721.png"></p>
+<p>根据计算方式，其实我们也就很容易知道RPE的好处了，RPE只使用位姿的变化而不关心估计的绝对位姿，因此消除了估计的绝对位置对于最终结果的影响。APE中每个绝对位姿都是相对于绝对坐标系的，因此含有绝对位置的影响。</p>
+</blockquote>
+<blockquote>
+<p>📌Eigen&#x2F;库的理论实践</p>
+<p>Eigen库的神奇之处在于它是一个完全用头文件搭建的库，没有.so或.a 那样的二进制文件。</p>
+<p>我们在使用时，只需引入 Eigen 的头文件即可，不需要链接它的库文件（因为它没有库文</p>
+<p>件）。</p>
+<p>重复一遍，因为 Eigen 库只有头文件，我们不需要再用 tartget_link_libraries 语句将程序链接到库上。不过，对于其他大部分库，多数时候需要用到链接命令。</p>
+</blockquote>
+<blockquote>
+<p>📌<strong>旋转向量</strong></p>
+<p>为什么要引入旋转向量？</p>
+<p>A：旋转使三自由度运动，平移也是三自由度运动，为了描述一个六自由度变换，变换矩阵采用了16个元素，造成表达非常不紧凑，同理旋转矩阵。</p>
+<p>旋转矩阵自身带有约束：它必须是个正交矩阵，且行列式为 1。<strong>变换矩阵也是如此（因为变换矩阵包含了旋转矩阵）。</strong> 当我们想要估计或优化一个旋转矩阵&#x2F;变换矩阵时，这些约束会使得求解变得更困难。</p>
+<p>为了表达更加紧凑，引入了旋转向量。</p>
+<p>任意旋转都可以用一个旋转轴和一个旋转角来刻画。于是，我们可以使用一个向量，<strong>其方向与旋转轴一致，而长度等于旋转角</strong>。这种向量，称为旋转向量。</p>
+<p>由旋转向量到旋转矩阵的过程由<strong>罗德里格斯公式（Rodrigues’s Formula ）</strong> 表明：</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322494.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322233.png"></p>
+<p>旋转矩阵特征值为1时对应的特征向量，|R-λE|&#x3D;0，特征值为1，说明旋转矩阵为单位矩阵，说明在这个特征向量（解）上没有旋转变化，转轴上的旋转没有旋转变化，所以对应的特征向量就是转轴。求解矩阵R特征值为1时候的特征向量就得到了旋转轴。利用式3.16求得转角，就获得了<strong>旋转向量。</strong></p>
+<p>这里共涉及到两种变换，假设一个旋转轴为 n ,角度为θ的旋转。</p>
+<ol>
+<li><p>从旋转向量到旋转矩阵的变换：罗德里格斯公式。</p>
+</li>
+<li><p>从旋转矩阵到旋转向量的变换。 &amp;#x20;</p>
+<p>①.对 θ :  公式3.16</p>
+<p>②.对 n ：转轴 n ，是矩阵 R 特征值1对应的特征向量。</p>
+<p><img data-src="/image/image_nsoQdMmLFK.png"></p>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>📌<strong>欧拉角</strong></p>
+<p>无论是旋转矩阵还是旋转向量，都是数学的形式，不能很直观的反应旋转的形式。欧拉角将旋转分解为了绕三个固定轴的旋转。</p>
+<p>欧拉角当中比较常用的一种，便是用“偏航-俯仰-滚转”（yaw-pitch-roll）三个角度来描述一个旋转的。它等价于 ZY X 轴的旋转。在右手坐标系中进行记忆：</p>
+<ol>
+<li><p>绕物体的 Z 轴旋转，得到偏航角 yaw；</p>
+</li>
+<li><p>绕旋转之后的 Y 轴旋转，得到俯仰角 pitch；</p>
+</li>
+<li><p>绕旋转之后的 X 轴旋转，得到滚转角 roll。</p>
+</li>
+</ol>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322394.png"></p>
+<p><img data-src="/image/image_icJyhksFNx.png"></p>
+<hr>
+<p>欧拉角中最大的问题是万向锁，这种现象被称为具有奇异性，例如应用zxy的转法，首先改变偏航角，再改变滚转角，再改变俯仰角。如果第二次旋转，滚转角为90度，则第三次旋转将会变得与第一次旋转相同，就丢失了一个自由度。相当于第二次如果转90度，x就跑到了原本z轴的位置，那么第三次旋转就和第一次一样，那么就变成了三次旋转只转了两次。丢失了一个自由度。其他欧拉角旋转方式也具有类似的问题。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322362.png"></p>
+<p>欧拉角常用于人机交互，在SLAM中不常用。</p>
+</blockquote>
+<blockquote>
+<p>📌<strong>四元数</strong></p>
+<p>三维旋转是一个三维流形，想要无奇异性地表达它，用三个量是不够的。</p>
+<p><strong>四元数是一种扩展的复数。</strong> 一个实部和三个虚部。</p>
+<p>实部为0，虚四元数，虚部为0，实四元数</p>
+<p>因此，在四元数中，任意的旋转都可以由两个互为相反数的四元数表示。</p>
+<p>四元数的共轭是把虚部取成相反数</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322828.png"></p>
+<p>四元数共轭与自己本身相乘，会得到一个实四元数，其实部为模长的平方:</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322894.png"></p>
+<p>两个单位四元数相乘后依然是单位四元数。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322950.png"></p>
+<p>单位四元数的逆和共轭相等</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322786.jpg"></p>
+<p><strong>用四元数表示旋转</strong></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322493.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322067.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262322697.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262323777.jpg"></p>
+<p>旋转矩阵、旋转向量、四元数之间可以相互转化。由于上述推算的方法需要计算arcos不太划算，所以，采用另一种方法跳过这个计算，如下：</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262323373.png"></p>
+<p>由于 q 和 −q 表示同一个旋转，事实上一个 R 对应的四元数表示并不是唯一的。</p>
+</blockquote>
+<blockquote>
+<p>📌<strong>相似、仿射、射影变换</strong></p>
+<p>欧氏变换保持了向量的长度和夹角，是一个刚体运动，形状是不变的。</p>
+<p><strong>相似变换</strong>比欧氏变换多了一个自由度，允许物体进行均匀的缩放。但是是成比例的。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262323336.png"></p>
+<p><strong>仿射变换</strong>只要求A是一个可逆矩阵而不必是正交矩阵，仿射变换也叫正交投影，经过仿射变换之后，立方体就不再是方的了，但是各个面仍然是平行四边形。保持了平直性和平行性，但是角度会变。变换后直线还是直线，圆弧还是圆弧。平行线还是平行线，直线上点的位置顺序不变</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262323413.png"></p>
+<p><strong>射影变换</strong>是最一般的变化。二维8自由度，三维15自由度。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262323362.png"></p>
+<p><strong>从真实世界到相机照片的变换是一个射影变换。如果相机的焦距为无穷远，那么这个变换则为仿射变换。</strong></p>
+<p>三维空间下，四种变换的自由度区别。</p>
+<p>欧式变换   6自由度   三个轴，每个轴有平移和旋转，3x2&#x3D;6</p>
+<p>相似变换   7自由度  成比例缩放  多加一个自由度   7</p>
+<p>仿射变换   12 自由度 三个轴，每个轴缩放、旋转、平移、倾斜  3x4&#x3D;12 如果是2维，则是6自由度</p>
+<p>&amp;#x20;             另一个角度，从公式去理解 A9个元素，t三个元素，12个元素变换都影响结果。因此  &amp;#x20;</p>
+<p>&amp;#x20;             是12自由度</p>
+<p>射影变换  从公式来看v不等于0时，这个变换矩阵是是齐次的。否则右下角一直为0，也没变化，没意义。那么4x4&#x3D;16的矩阵里，只有1 不变，那么是15自由度。如果对于二维空间，那齐次矩阵就变成了3x3-1&#x3D;8，因此二维空间的射影变换是8自由度。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208262323054.png"></p>
+<p>二维中，一个点有两个自由度。</p>
+<p>真实世界拍照是射影变换，如果焦距无限远就变成了仿射变换。射影变换只保留了点的共线性，平行性消失了。</p>
+</blockquote>
+<blockquote>
+<p>📌Eigen使用总结</p>
+</blockquote>
+<blockquote>
+<p>📌<strong>值得做的习题，证明方面的。</strong></p>
+<ol>
+<li><p>验证旋转矩阵是正交矩阵。</p>
+</li>
+<li><p>&amp;#x20;一般线程方程 Ax &#x3D; b 有哪几种做法？你能在 Eigen 中实现吗？</p>
+</li>
+</ol>
+</blockquote>
+]]></content>
+      <categories>
+        <category>视觉SLAM</category>
+      </categories>
+      <tags>
+        <tag>SLAM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>视觉SLAM十四讲——第二讲</title>
+    <url>/2022/08/25/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E2%80%94%E2%80%94%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
+    <content><![CDATA[<p>这是一篇待补充的内容</p>
+<span id="more"></span>]]></content>
+      <categories>
+        <category>视觉SLAM</category>
+      </categories>
+      <tags>
+        <tag>SLAM</tag>
+        <tag>About me</tag>
+        <tag>c++</tag>
+        <tag>Eigen</tag>
+        <tag>G2o</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>视觉SLAM十四讲-第二讲：初识SLAM</title>
     <url>/2022/08/26/%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
     <content><![CDATA[<p>本文主要介绍视觉SLAM十四讲中第二讲的关键内容。</p>
@@ -35,22 +222,6 @@
       </categories>
       <tags>
         <tag>SLAM</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>视觉SLAM十四讲——第二讲</title>
-    <url>/2022/08/25/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E2%80%94%E2%80%94%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
-    <content><![CDATA[<p>这是一篇待补充的内容</p>
-<span id="more"></span>]]></content>
-      <categories>
-        <category>视觉SLAM</category>
-      </categories>
-      <tags>
-        <tag>SLAM</tag>
-        <tag>About me</tag>
-        <tag>c++</tag>
-        <tag>Eigen</tag>
-        <tag>G2o</tag>
       </tags>
   </entry>
   <entry>
