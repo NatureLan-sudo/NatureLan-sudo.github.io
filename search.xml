@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>视觉SLAM十四讲-第三讲：三维空间刚体运动</title>
-    <url>/2022/08/28/%E7%AC%AC%E4%B8%89%E8%AE%B2/</url>
+    <url>/2022/08/28/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E4%B9%8B%E7%AC%AC%E4%B8%89%E8%AE%B2/</url>
     <content><![CDATA[<h2 id="第三讲：三维空间刚体运动"><a href="#第三讲：三维空间刚体运动" class="headerlink" title="第三讲：三维空间刚体运动"></a>第三讲：三维空间刚体运动</h2><p><strong>利用旋转+平移描述三维空间刚体的运动</strong></p>
 <span id="more"></span>
 
@@ -172,24 +172,60 @@
       </tags>
   </entry>
   <entry>
-    <title>视觉SLAM十四讲——第二讲</title>
-    <url>/2022/08/25/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E2%80%94%E2%80%94%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
-    <content><![CDATA[<p>这是一篇待补充的内容</p>
-<span id="more"></span>]]></content>
+    <title>上传项目至Github并修改init主分支为main</title>
+    <url>/2022/08/29/%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E8%87%B3GitHub,%E5%B9%B6%E4%BF%AE%E6%94%B9init%E4%B8%BB%E5%88%86%E6%94%AF%E4%B8%BAmain/</url>
+    <content><![CDATA[<p>摘要：本文介绍了如何将本地项目上传至GitHub，并修改init主分支为main。</p>
+<span id="more"></span>
+<h2 id="1、创建项目"><a href="#1、创建项目" class="headerlink" title="1、创建项目"></a>1、创建项目</h2><p>首先，我们需要在LeetCode创建一个自己的项目，并利用Add readme自动初始化项目。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939784.png"></p>
+<p>本文默认已经配置了SSH公钥。</p>
+<h2 id="2、修改init的默认分支"><a href="#2、修改init的默认分支" class="headerlink" title="2、修改init的默认分支"></a>2、修改init的默认分支</h2><p>在2020年10月1起，github默认主分支从master更名为main，以上提交方式会默认创建一个master分支，为保持一致性，可将本地git init的时候默认分支修改为main，执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git --version    查看版本</span><br><span class="line">git config --global init.defaultBranch main   git在2.28.0上，重新设置git默认分支为main</span><br></pre></td></tr></table></figure>
+
+<p>如果不小心创建了master分支，可以执行命令删除</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">删除本地分支：git branch -d 分支名称</span><br><span class="line">强制删除本地分支：git branch -D 分支名称</span><br><span class="line">删除远程分支：git push origin --delete 分支名称</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、第一次项目提交"><a href="#3、第一次项目提交" class="headerlink" title="3、第一次项目提交"></a>3、第一次项目提交</h2><h3 id="①-初始化git"><a href="#①-初始化git" class="headerlink" title="① 初始化git"></a>① 初始化git</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+
+<h3 id="②-添加文件到缓存区"><a href="#②-添加文件到缓存区" class="headerlink" title="② 添加文件到缓存区"></a>② 添加文件到缓存区</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git add .</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939230.png"></p>
+<h3 id="③-提交说明"><a href="#③-提交说明" class="headerlink" title="③ 提交说明"></a>③ 提交说明</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git commit -m &quot;需要注释的内容&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939775.png"></p>
+<h3 id="④-链接到项目"><a href="#④-链接到项目" class="headerlink" title="④ 链接到项目"></a>④ 链接到项目</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git remote add origin http://xxxxxxxxx.git   //本地仓库和远程github关联</span><br></pre></td></tr></table></figure>
+
+<h3 id="⑤-第一次提交需要拉取项目中的readme"><a href="#⑤-第一次提交需要拉取项目中的readme" class="headerlink" title="⑤ 第一次提交需要拉取项目中的readme"></a>⑤ 第一次提交需要拉取项目中的readme</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git pull --rebase origin main</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939043.png"></p>
+<h3 id="⑥-推送至远程GIT-项目合并"><a href="#⑥-推送至远程GIT-项目合并" class="headerlink" title="⑥ 推送至远程GIT 项目合并"></a>⑥ 推送至远程GIT 项目合并</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939631.png"></p>
+<p>特地强调一下 -u 操作。在我们第一次提交git的时候使用这个参数，在以后我们要进行二次提交的时候，就可以用</p>
+<p><code>git push</code>代替 <code>git push origin main</code>.</p>
+<h2 id="4、更新结果"><a href="#4、更新结果" class="headerlink" title="4、更新结果"></a>4、更新结果</h2><p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939457.png"></p>
+<h2 id="5、下一次提交？"><a href="#5、下一次提交？" class="headerlink" title="5、下一次提交？"></a>5、下一次提交？</h2><p>我们希望持续的维护一个项目，就会对代码进行修改，修改后，再次提交。</p>
+<p>为了展示如何修改，修改项目中的文件，并增加新的文件 1、两数之和。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939832.png"></p>
+<p>在本地的代码指令如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git status   //查看有哪些文件修改</span><br><span class="line">git add 文件名   //哪些文件要提交</span><br><span class="line">git add .       //全部添加到暂存区</span><br><span class="line">git add -A        //所有修改、增加、删除都添加到暂存区</span><br><span class="line">git commit  -m &quot;注释&quot;     //提交 </span><br><span class="line">git push      //推送</span><br></pre></td></tr></table></figure>
+
+<p>如果想直接提交所有修改文件，命令可以更简洁</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git commit -a  -m &quot;注释&quot;    //提交所有修改</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+
+<p>这样就完成了再次提交。</p>
+<p>本文到此就结束啦，希望对你有所帮助。</p>
+]]></content>
       <categories>
-        <category>视觉SLAM</category>
+        <category>Git</category>
       </categories>
       <tags>
-        <tag>SLAM</tag>
-        <tag>About me</tag>
-        <tag>c++</tag>
-        <tag>Eigen</tag>
-        <tag>G2o</tag>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
     <title>视觉SLAM十四讲-第二讲：初识SLAM</title>
-    <url>/2022/08/26/%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
+    <url>/2022/08/26/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E4%B9%8B%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
     <content><![CDATA[<p>本文主要介绍视觉SLAM十四讲中第二讲的关键内容。</p>
 <span id="more"></span>
 <h2 id="第二讲：初识SLAM"><a href="#第二讲：初识SLAM" class="headerlink" title="第二讲：初识SLAM"></a>第二讲：初识SLAM</h2><p>一类传感器是<strong>携带于机器人本体上</strong>的，例如机器人的轮式编码器、相机、激光等等 ——通过间接测量数据推算位置，好处是对环境没有提出要求，适用于位置环境。</p>
