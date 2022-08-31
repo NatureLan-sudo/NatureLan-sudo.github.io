@@ -21,26 +21,31 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"naturelan-sudo.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.12.3","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":"12`"},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="物来顺应，未来不迎.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Nature的博客">
-<meta property="og:url" content="https://naturelan-sudo.github.io/archives/index.html">
+    <meta name="description" content="编译过程可以分为以下三个过程：编译（编译预处理、编译、优化），汇编，链接。其中编译又可以分为编译预处理以及编译优化，就可以划分为四部分。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="四星 C++ 程序编译过程">
+<meta property="og:url" content="https://naturelan-sudo.github.io/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/index.html">
 <meta property="og:site_name" content="Nature的博客">
-<meta property="og:description" content="物来顺应，未来不迎.">
+<meta property="og:description" content="编译过程可以分为以下三个过程：编译（编译预处理、编译、优化），汇编，链接。其中编译又可以分为编译预处理以及编译优化，就可以划分为四部分。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038882.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038200.png">
+<meta property="article:published_time" content="2022-08-31T08:00:26.866Z">
+<meta property="article:modified_time" content="2022-08-31T08:04:17.988Z">
 <meta property="article:author" content="Nature LAN">
-<meta property="article:tag" content="VIO-SLAM、CSLAM">
+<meta property="article:tag" content="c++">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038882.png">
 
 
-<link rel="canonical" href="https://naturelan-sudo.github.io/archives/">
+<link rel="canonical" href="https://naturelan-sudo.github.io/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"archives/index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://naturelan-sudo.github.io/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/","path":"2022/08/31/四星C++ 程序编译过程 - 2022-08-28/","title":"四星 C++ 程序编译过程"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>归档 | Nature的博客</title>
+<title>四星 C++ 程序编译过程 | Nature的博客</title>
   
 
 
@@ -71,7 +76,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">Nature的博客</h1>
+      <p class="site-title">Nature的博客</p>
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">物来顺应，未来不迎. </p>
@@ -131,7 +136,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -144,6 +149,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E7%BC%96%E8%AF%91%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">1、编译预处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E7%BC%96%E8%AF%91%E3%80%81%E4%BC%98%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">2、编译、优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E6%B1%87%E7%BC%96"><span class="nav-number">3.</span> <span class="nav-text">3、汇编</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81%E9%93%BE%E6%8E%A5"><span class="nav-number">4.</span> <span class="nav-text">4、链接</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -223,130 +229,191 @@
 </noscript>
 
 
-    <div class="main-inner archive posts-collapse">
+    <div class="main-inner post posts-expand">
 
 
   
-  
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 5 篇日志。 继续努力。</span>
-      </div>
 
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://naturelan-sudo.github.io/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://s2.loli.net/2022/08/25/mi5U3Lr2uyGRoEA.webp">
+      <meta itemprop="name" content="Nature LAN">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nature的博客">
+      <meta itemprop="description" content="物来顺应，未来不迎. ">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="四星 C++ 程序编译过程 | Nature的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          四星 C++ 程序编译过程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2022</span>
+
+      <time title="创建时间：2022-08-31 16:00:26 / 修改时间：16:04:17" itemprop="dateCreated datePublished" datetime="2022-08-31T16:00:26+08:00">2022-08-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/C-%E7%AA%81%E5%87%BB/" itemprop="url" rel="index"><span itemprop="name">C++突击</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>834</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>编译过程可以分为以下三个过程：编译（编译预处理、编译、优化），汇编，链接。<br>其中编译又可以分为编译预处理以及编译优化，就可以划分为四部分。</p>
+<span id="more"></span>
+
+<h2 id="1、编译预处理"><a href="#1、编译预处理" class="headerlink" title="1、编译预处理"></a>1、编译预处理</h2><p>编译预处理：处理以 # 开头的指令；</p>
+<p>例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> </span></span><br><span class="line"><span class="meta">#program once</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2、编译、优化"><a href="#2、编译、优化" class="headerlink" title="2、编译、优化"></a>2、编译、优化</h2><p>将源码 .cpp 文件翻译成 .s 汇编代码；</p>
+<h2 id="3、汇编"><a href="#3、汇编" class="headerlink" title="3、汇编"></a>3、汇编</h2><p>将汇编代码 .s 翻译成机器指令 .o 文件；</p>
+<h2 id="4、链接"><a href="#4、链接" class="headerlink" title="4、链接"></a>4、链接</h2><p>汇编程序生成的目标文件，即 .o 文件，并不会立即执行，因为可能会出现：.cpp 文件中的函数引用了另一个 .cpp 文件中定义的符号或者调用了某个库文件中的函数。那链接的目的就是将这些文件对应的目标文件连接成一个整体，从而生成可执行的程序 .exe 文件。</p>
+<p><strong>链接包括静态链接和动态链接</strong></p>
+<p><strong>静态链接</strong>：代码从其所在的静态链接库中拷贝到最终的可执行程序中，在该程序被执行时，这些代码会被装入到该进程的虚拟地址空间中。</p>
+<p>通俗的讲：静态链接将程序调用的库一起打包到可执行文件中，这样执行时候就不用调用其他的库，速度快。但是，可能多个文件都链接了同一个库，那么这个库就被打包了很多次，造成了该空间上的浪费。如果这个库更新了的话，整个程序需要重新编译。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038882.png" alt="静态链接"></p>
+<p><strong>动态链接</strong>：代码被放到动态链接库或共享对象的某个目标文件中，链接程序只是在最终的可执行程序中记录了共享对象的名字等一些信息。在程序执行时，动态链接库的全部内容会被映射到运行时相应进行的虚拟地址的空间。</p>
+<p>通俗的讲：动态链接是在程序执行时候才引入的库，因此方便更新。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038200.png" alt="动态链接"></p>
+<p>二者的优缺点：</p>
+<p>静态链接：<strong>浪费空间，</strong>每个可执行程序都会有目标文件的一个副本，这样如果目标文件进行了更新操作，就需要重新进行编译链接生成可执行程序<strong>（更新困难）</strong>；优点就是执行的时候运行<strong>速度快，</strong> 因为可执行程序具备了程序运行的所有内容。<br>动态链接：<strong>节省内存、更新方便</strong>，但是动态链接是在程序运行时，每次执行都需要链接，<strong>相比静态链接会有一定的性能损失。</strong></p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-08-31T16:00:26+08:00"
-              content="2022-08-31">
-          08-31
-        </time>
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>码字不易，赏个鸡腿~</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Nature LAN 微信">
+        <span>微信</span>
       </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/" itemprop="url">
-            <span itemprop="name">四星 C++ 程序编译过程</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-08-29T19:40:01+08:00"
-              content="2022-08-29">
-          08-29
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/08/29/%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E8%87%B3GitHub,%E5%B9%B6%E4%BF%AE%E6%94%B9init%E4%B8%BB%E5%88%86%E6%94%AF%E4%B8%BAmain/" itemprop="url">
-            <span itemprop="name">上传项目至Github并修改init主分支为main</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-08-28T21:31:16+08:00"
-              content="2022-08-28">
-          08-28
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/08/28/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E4%B9%8B%E7%AC%AC%E4%B8%89%E8%AE%B2/" itemprop="url">
-            <span itemprop="name">视觉SLAM十四讲-第三讲：三维空间刚体运动</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-08-27T10:22:38+08:00"
-              content="2022-08-27">
-          08-27
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/08/27/%E8%A7%A3%E5%86%B3typora%E6%8F%90%E7%A4%BAThis%20beta%20version%20of%20Typora%20is%20expired/" itemprop="url">
-            <span itemprop="name">解决typora提示:This beta version of Typora is expired</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-08-26T22:13:16+08:00"
-              content="2022-08-26">
-          08-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/08/26/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E4%B9%8B%E7%AC%AC%E4%BA%8C%E8%AE%B2/" itemprop="url">
-            <span itemprop="name">视觉SLAM十四讲-第二讲：初识SLAM</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-
-    </div>
   </div>
-  
-  
-  
+</div>
 
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Nature LAN
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://naturelan-sudo.github.io/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/" title="四星 C++ 程序编译过程">https://naturelan-sudo.github.io/2022/08/31/四星C++ 程序编译过程 - 2022-08-28/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/c/" rel="tag"># c++</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/08/29/%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E8%87%B3GitHub,%E5%B9%B6%E4%BF%AE%E6%94%B9init%E4%B8%BB%E5%88%86%E6%94%AF%E4%B8%BAmain/" rel="prev" title="上传项目至Github并修改init主分支为main">
+                  <i class="fa fa-chevron-left"></i> 上传项目至Github并修改init主分支为main
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
 </div>
   </main>
 
@@ -427,7 +494,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.7.2/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
 
-<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"NatureLan-sudo","repo":"NatureLan-sudo.github.io","client_id":"a02fafbfa5f0bbdbc250","client_secret":"86b918751755674129a18cb1d254c0871d4654b2","admin_user":"NatureLan-sudo","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.7.2/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"b86805e3c045105f4f74c304744b551e"}</script>
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"NatureLan-sudo","repo":"NatureLan-sudo.github.io","client_id":"a02fafbfa5f0bbdbc250","client_secret":"86b918751755674129a18cb1d254c0871d4654b2","admin_user":"NatureLan-sudo","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.7.2/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"ea7933165772ce701022a5a4b9cb68d6"}</script>
 <script src="/js/third-party/comments/gitalk.js"></script>
 
 </body>
