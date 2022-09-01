@@ -21,36 +21,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"naturelan-sudo.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.12.3","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":"12`"},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要：本文介绍了如何将本地项目上传至GitHub，并修改init主分支为main。">
+    <meta name="description" content="C++ 内存分区：栈、堆、全局&#x2F;静态存储区、常量存储区、代码区。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="上传项目至Github并修改init主分支为main">
-<meta property="og:url" content="https://naturelan-sudo.github.io/2022/08/29/%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E8%87%B3GitHub,%E5%B9%B6%E4%BF%AE%E6%94%B9init%E4%B8%BB%E5%88%86%E6%94%AF%E4%B8%BAmain/index.html">
+<meta property="og:title" content="五星 C++ 内存管理">
+<meta property="og:url" content="https://naturelan-sudo.github.io/2022/09/01/%E4%BA%94%E6%98%9FC++%20%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%20-2022-08-29/index.html">
 <meta property="og:site_name" content="Nature的博客">
-<meta property="og:description" content="摘要：本文介绍了如何将本地项目上传至GitHub，并修改init主分支为main。">
+<meta property="og:description" content="C++ 内存分区：栈、堆、全局&#x2F;静态存储区、常量存储区、代码区。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939784.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939230.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939775.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939043.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939631.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939457.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939832.png">
-<meta property="article:published_time" content="2022-08-29T11:40:01.479Z">
-<meta property="article:modified_time" content="2022-08-29T11:44:25.308Z">
+<meta property="article:published_time" content="2022-09-01T03:23:19.071Z">
+<meta property="article:modified_time" content="2022-09-01T03:26:24.247Z">
 <meta property="article:author" content="Nature LAN">
-<meta property="article:tag" content="git">
+<meta property="article:tag" content="c++">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939784.png">
 
 
-<link rel="canonical" href="https://naturelan-sudo.github.io/2022/08/29/%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E8%87%B3GitHub,%E5%B9%B6%E4%BF%AE%E6%94%B9init%E4%B8%BB%E5%88%86%E6%94%AF%E4%B8%BAmain/">
+<link rel="canonical" href="https://naturelan-sudo.github.io/2022/09/01/%E4%BA%94%E6%98%9FC++%20%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%20-2022-08-29/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://naturelan-sudo.github.io/2022/08/29/%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E8%87%B3GitHub,%E5%B9%B6%E4%BF%AE%E6%94%B9init%E4%B8%BB%E5%88%86%E6%94%AF%E4%B8%BAmain/","path":"2022/08/29/将本地项目上传至GitHub,并修改init主分支为main/","title":"上传项目至Github并修改init主分支为main"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://naturelan-sudo.github.io/2022/09/01/%E4%BA%94%E6%98%9FC++%20%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%20-2022-08-29/","path":"2022/09/01/五星C++ 内存管理 -2022-08-29/","title":"五星 C++ 内存管理"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>上传项目至Github并修改init主分支为main | Nature的博客</title>
+<title>五星 C++ 内存管理 | Nature的博客</title>
   
 
 
@@ -141,7 +133,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <div class="sidebar-inner sidebar-overview-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -154,7 +146,6 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1、创建项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E4%BF%AE%E6%94%B9init%E7%9A%84%E9%BB%98%E8%AE%A4%E5%88%86%E6%94%AF"><span class="nav-number">2.</span> <span class="nav-text">2、修改init的默认分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%A1%B9%E7%9B%AE%E6%8F%90%E4%BA%A4"><span class="nav-number">3.</span> <span class="nav-text">3、第一次项目提交</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%91%A0-%E5%88%9D%E5%A7%8B%E5%8C%96git"><span class="nav-number">3.1.</span> <span class="nav-text">① 初始化git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%91%A1-%E6%B7%BB%E5%8A%A0%E6%96%87%E4%BB%B6%E5%88%B0%E7%BC%93%E5%AD%98%E5%8C%BA"><span class="nav-number">3.2.</span> <span class="nav-text">② 添加文件到缓存区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%91%A2-%E6%8F%90%E4%BA%A4%E8%AF%B4%E6%98%8E"><span class="nav-number">3.3.</span> <span class="nav-text">③ 提交说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%91%A3-%E9%93%BE%E6%8E%A5%E5%88%B0%E9%A1%B9%E7%9B%AE"><span class="nav-number">3.4.</span> <span class="nav-text">④ 链接到项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%91%A4-%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8F%90%E4%BA%A4%E9%9C%80%E8%A6%81%E6%8B%89%E5%8F%96%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84readme"><span class="nav-number">3.5.</span> <span class="nav-text">⑤ 第一次提交需要拉取项目中的readme</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%91%A5-%E6%8E%A8%E9%80%81%E8%87%B3%E8%BF%9C%E7%A8%8BGIT-%E9%A1%B9%E7%9B%AE%E5%90%88%E5%B9%B6"><span class="nav-number">3.6.</span> <span class="nav-text">⑥ 推送至远程GIT 项目合并</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81%E6%9B%B4%E6%96%B0%E7%BB%93%E6%9E%9C"><span class="nav-number">4.</span> <span class="nav-text">4、更新结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E3%80%81%E4%B8%8B%E4%B8%80%E6%AC%A1%E6%8F%90%E4%BA%A4%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">5、下一次提交？</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -245,7 +236,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://naturelan-sudo.github.io/2022/08/29/%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E8%87%B3GitHub,%E5%B9%B6%E4%BF%AE%E6%94%B9init%E4%B8%BB%E5%88%86%E6%94%AF%E4%B8%BAmain/">
+    <link itemprop="mainEntityOfPage" href="https://naturelan-sudo.github.io/2022/09/01/%E4%BA%94%E6%98%9FC++%20%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%20-2022-08-29/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://s2.loli.net/2022/08/25/mi5U3Lr2uyGRoEA.webp">
@@ -258,12 +249,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="上传项目至Github并修改init主分支为main | Nature的博客">
+      <meta itemprop="name" content="五星 C++ 内存管理 | Nature的博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          上传项目至Github并修改init主分支为main
+          五星 C++ 内存管理
         </h1>
 
         <div class="post-meta-container">
@@ -275,7 +266,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-08-29 19:40:01 / 修改时间：19:44:25" itemprop="dateCreated datePublished" datetime="2022-08-29T19:40:01+08:00">2022-08-29</time>
+      <time title="创建时间：2022-09-01 11:23:19 / 修改时间：11:26:24" itemprop="dateCreated datePublished" datetime="2022-09-01T11:23:19+08:00">2022-09-01</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -283,7 +274,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+          <a href="/categories/C-%E7%AA%81%E5%87%BB/" itemprop="url" rel="index"><span itemprop="name">C++突击</span></a>
         </span>
     </span>
 
@@ -301,14 +292,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1k</span>
+      <span>1.9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
+      <span>2 分钟</span>
     </span>
 </div>
 
@@ -319,47 +310,41 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>摘要：本文介绍了如何将本地项目上传至GitHub，并修改init主分支为main。</p>
+        <p>C++ 内存分区：<strong>栈、堆、全局&#x2F;静态存储区、常量存储区、代码区</strong>。</p>
 <span id="more"></span>
-<h2 id="1、创建项目"><a href="#1、创建项目" class="headerlink" title="1、创建项目"></a>1、创建项目</h2><p>首先，我们需要在LeetCode创建一个自己的项目，并利用Add readme自动初始化项目。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939784.png"></p>
-<p>本文默认已经配置了SSH公钥。</p>
-<h2 id="2、修改init的默认分支"><a href="#2、修改init的默认分支" class="headerlink" title="2、修改init的默认分支"></a>2、修改init的默认分支</h2><p>在2020年10月1起，github默认主分支从master更名为main，以上提交方式会默认创建一个master分支，为保持一致性，可将本地git init的时候默认分支修改为main，执行：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git --version    查看版本</span><br><span class="line">git config --global init.defaultBranch main   git在2.28.0上，重新设置git默认分支为main</span><br></pre></td></tr></table></figure>
 
-<p>如果不小心创建了master分支，可以执行命令删除</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">删除本地分支：git branch -d 分支名称</span><br><span class="line">强制删除本地分支：git branch -D 分支名称</span><br><span class="line">删除远程分支：git push origin --delete 分支名称</span><br></pre></td></tr></table></figure>
-
-<h2 id="3、第一次项目提交"><a href="#3、第一次项目提交" class="headerlink" title="3、第一次项目提交"></a>3、第一次项目提交</h2><h3 id="①-初始化git"><a href="#①-初始化git" class="headerlink" title="① 初始化git"></a>① 初始化git</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
-
-<h3 id="②-添加文件到缓存区"><a href="#②-添加文件到缓存区" class="headerlink" title="② 添加文件到缓存区"></a>② 添加文件到缓存区</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939230.png"></p>
-<h3 id="③-提交说明"><a href="#③-提交说明" class="headerlink" title="③ 提交说明"></a>③ 提交说明</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m &quot;需要注释的内容&quot;</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939775.png"></p>
-<h3 id="④-链接到项目"><a href="#④-链接到项目" class="headerlink" title="④ 链接到项目"></a>④ 链接到项目</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin http://xxxxxxxxx.git   //本地仓库和远程github关联</span><br></pre></td></tr></table></figure>
-
-<h3 id="⑤-第一次提交需要拉取项目中的readme"><a href="#⑤-第一次提交需要拉取项目中的readme" class="headerlink" title="⑤ 第一次提交需要拉取项目中的readme"></a>⑤ 第一次提交需要拉取项目中的readme</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull --rebase origin main</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939043.png"></p>
-<h3 id="⑥-推送至远程GIT-项目合并"><a href="#⑥-推送至远程GIT-项目合并" class="headerlink" title="⑥ 推送至远程GIT 项目合并"></a>⑥ 推送至远程GIT 项目合并</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939631.png"></p>
-<p>特地强调一下 -u 操作。在我们第一次提交git的时候使用这个参数，在以后我们要进行二次提交的时候，就可以用</p>
-<p><code>git push</code>代替 <code>git push origin main</code>.</p>
-<h2 id="4、更新结果"><a href="#4、更新结果" class="headerlink" title="4、更新结果"></a>4、更新结果</h2><p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939457.png"></p>
-<h2 id="5、下一次提交？"><a href="#5、下一次提交？" class="headerlink" title="5、下一次提交？"></a>5、下一次提交？</h2><p>我们希望持续的维护一个项目，就会对代码进行修改，修改后，再次提交。</p>
-<p>为了展示如何修改，修改项目中的文件，并增加新的文件 1、两数之和。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208291939832.png"></p>
-<p>在本地的代码指令如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git status   //查看有哪些文件修改</span><br><span class="line">git add 文件名   //哪些文件要提交</span><br><span class="line">git add .       //全部添加到暂存区</span><br><span class="line">git add -A        //所有修改、增加、删除都添加到暂存区</span><br><span class="line">git commit  -m &quot;注释&quot;     //提交 </span><br><span class="line">git push      //推送</span><br></pre></td></tr></table></figure>
-
-<p>如果想直接提交所有修改文件，命令可以更简洁</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git commit -a  -m &quot;注释&quot;    //提交所有修改</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
-
-<p>这样就完成了再次提交。</p>
-<p>本文到此就结束啦，希望对你有所帮助。</p>
+<p><strong>栈</strong>：存放函数的局部变量、函数参数、返回地址等，<strong>由编译器自动分配和释放</strong>。</p>
+<blockquote>
+<p>栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈互相独立。每个函数都有自己的栈，栈被用来在函数之间传递参数。操作系统在切换线程的时候会自动的切换栈，就是切换SS&#x2F;ESP寄存器。栈空间不需要在高级语言里面显式的分配和释放。</p>
+</blockquote>
+<p><strong>堆</strong>：动态申请的内存空间，就是由 **malloc **分配的内存块，<strong>由程序员控制它的分配和释放</strong>，如果程序执行结束还没有释放，操作系统会自动回收。（是可能会会释放，所以说，用完了一定记得要释放，不然会造成内存泄露）。</p>
+<blockquote>
+<p>堆一般由程序员分配释放，若不释放，程序结束时可能由OS回收。注意这里说是可能，并非一定。所以我想再强调一次，记得要释放！注意它与数据结构中的堆是两回事，分配方式倒是类似于链表。</p>
+<p>当内存不再使用的时候，应使用free()函数将内存块释放掉。</p>
+</blockquote>
+<p><strong>全局区&#x2F;静态存储区（.bss 段和 .data 段）</strong>：存放全局变量和静态变量，程序运行结束操作系统自动释放，在 C 语言中，未初始化的放在 .bss 段中，初始化的放在 .data 段中，C++ 中不再区分了。</p>
+<blockquote>
+<p>解释一下静态变量</p>
+<p>静态变量通过关键字static进行声明。</p>
+<p>经static修饰过后的变量或者函数的作用域会发生变化。该变量存储在数据段上，可以改变变量的作用域和生命周期。</p>
+<p><strong>全局静态变量</strong></p>
+<p>在全局变量前面加上关键词static，全局变量就被定义成一个全局静态变量</p>
+<p>（1）内存中的位置：静态存储区（静态存储区在整个程序运行期间都存在）</p>
+<p>（2）初始化：未经初始化的全局静态变量会被程序自动初始化为0</p>
+<p>（3）作用域：全局静态变量在声明他的文件之外是不可见的。准确地讲从定义之处开始到文件结尾。</p>
+<p><strong>局部静态变量</strong></p>
+<p>在局部变量前面加上关键词static，局部变量就被定义成一个局部静态变量。</p>
+<p>（1）内存中的位置：静态存储区</p>
+<p>（2）初始化：未经初始化的局部静态变量会被程序自动初始化为0（自动对象的值是任意的，除非他被显示初始化）</p>
+<p>（3）作用域：作用域仍为局部作用域，当定义它的函数或者语句块结束的时候，作用域随之结束。</p>
+<p><strong>C语言中使用静态函数的好处</strong></p>
+<p>（1）静态函数会被自动分配在一个一直使用的存储区，直到退出程序，<strong>避免了调用函数的压栈出栈</strong>，速度快很多。</p>
+<p>（2）static指函数的作用域仅局限于本文件。不<strong>用担心自己定义的函数是否会与其他文件的函数同名</strong></p>
+</blockquote>
+<p><strong>常量存储区（.data 段）</strong>：存放的是<strong>常量，不允许修改</strong>，程序运行结束自动释放。<br><strong>代码区（.text 段）</strong>：<strong>存放代码，不允许修改</strong>，但可以执行。编译后的二进制文件存放在这里。<br>说明：</p>
+<p>从操作系统的本身来讲，以上存储区在内存中的分布是如下形式(从低地址到高地址)：</p>
+<p><strong>.text 段 –&gt; .data 段 –&gt; .bss 段 –&gt; 堆 –&gt; unused –&gt; 栈 –&gt; env</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">说明：C++ 中不再区分初始化和未初始化的全局变量、静态变量的存储区，如果非要区分下述程序标注在了括号中</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> g_var = <span class="number">0</span>; <span class="comment">// g_var 在全局区（.data 段）</span></span><br><span class="line"><span class="type">char</span> *gp_var;  <span class="comment">// gp_var 在全局区（.bss 段）</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> var;                    <span class="comment">// var 在栈区</span></span><br><span class="line">    <span class="type">char</span> *p_var;                <span class="comment">// p_var 在栈区</span></span><br><span class="line">    <span class="type">char</span> arr[] = <span class="string">&quot;abc&quot;</span>;         <span class="comment">// arr 为数组变量，存储在栈区；&quot;abc&quot;为字符串常量，存储在常量区</span></span><br><span class="line">    <span class="type">char</span> *p_var1 = <span class="string">&quot;123456&quot;</span>;    <span class="comment">// p_var1 在栈区；&quot;123456&quot;为字符串常量，存储在常量区</span></span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> s_var = <span class="number">0</span>;       <span class="comment">// s_var 为静态变量，存在静态存储区（.data 段）</span></span><br><span class="line">    p_var = (<span class="type">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>); <span class="comment">// 分配得来的 10 个字节的区域在堆区</span></span><br><span class="line">    <span class="built_in">free</span>(p_var);                <span class="comment">// 因为使用了malloc堆的空间，由程序员自己释放掉</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：力扣 (LeetCode)</span><br><span class="line">链接：https:<span class="comment">//leetcode.cn/leetbook/read/cpp-interview-highlights/e4vkxv/</span></span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -391,7 +376,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://naturelan-sudo.github.io/2022/08/29/%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E8%87%B3GitHub,%E5%B9%B6%E4%BF%AE%E6%94%B9init%E4%B8%BB%E5%88%86%E6%94%AF%E4%B8%BAmain/" title="上传项目至Github并修改init主分支为main">https://naturelan-sudo.github.io/2022/08/29/将本地项目上传至GitHub,并修改init主分支为main/</a>
+      <a href="https://naturelan-sudo.github.io/2022/09/01/%E4%BA%94%E6%98%9FC++%20%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%20-2022-08-29/" title="五星 C++ 内存管理">https://naturelan-sudo.github.io/2022/09/01/五星C++ 内存管理 -2022-08-29/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -417,21 +402,18 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/git/" rel="tag"># git</a>
+              <a href="/tags/c/" rel="tag"># c++</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2022/08/28/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E4%B9%8B%E7%AC%AC%E4%B8%89%E8%AE%B2/" rel="prev" title="视觉SLAM十四讲-第三讲：三维空间刚体运动">
-                  <i class="fa fa-chevron-left"></i> 视觉SLAM十四讲-第三讲：三维空间刚体运动
+                <a href="/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/" rel="prev" title="四星 C++ 程序编译过程">
+                  <i class="fa fa-chevron-left"></i> 四星 C++ 程序编译过程
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/" rel="next" title="四星 C++ 程序编译过程">
-                  四星 C++ 程序编译过程 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -524,7 +506,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.7.2/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
 
-<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"NatureLan-sudo","repo":"NatureLan-sudo.github.io","client_id":"a02fafbfa5f0bbdbc250","client_secret":"86b918751755674129a18cb1d254c0871d4654b2","admin_user":"NatureLan-sudo","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.7.2/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"71cfe5c1ed6cb6d5c6faaf3f50478df0"}</script>
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"NatureLan-sudo","repo":"NatureLan-sudo.github.io","client_id":"a02fafbfa5f0bbdbc250","client_secret":"86b918751755674129a18cb1d254c0871d4654b2","admin_user":"NatureLan-sudo","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.7.2/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"02f739230d396cb8963c9cc1f038f9f1"}</script>
 <script src="/js/third-party/comments/gitalk.js"></script>
 
 </body>
