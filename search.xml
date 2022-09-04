@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>五星 C++ 堆和栈的区别</title>
+    <url>/2022/09/02/%E4%BA%94%E6%98%9F%20C++%E6%A0%88%E5%92%8C%E5%A0%86%E7%9A%84%E5%8C%BA%E5%88%AB%20%20%20-%20%20%20%202022-08-29/</url>
+    <content><![CDATA[<p><strong>申请方式：</strong> 栈是系统自动分配，堆是程序员主动申请。<strong>申请后系统响应：</strong>分配栈空间，如果剩余空间大于申请空间则分配成功，否则分配失败栈溢出；申请堆空间，堆在内存中呈现的方式类似于链表（记录空闲地址空间的链表），在链表上寻找第一个大于申请空间的节点分配给程序，将该节点从链表中删除，大多数系统中该块空间的首地址存放的是本次分配空间的大小，便于释放，将该块空间上的剩余空间再次连接在空闲链表上。<br>栈在内存中是连续的一块空间（向低地址扩展）<strong>最大容量是系统预定好的</strong>，堆在内存中的空间（向高地址扩展）是<strong>不连续</strong>的。<br><strong>申请效率：</strong> 栈是有系统自动分配，申请效率高，但程序员无法控制；堆是由程序员主动申请，效率低，使用起来方便但是容易产生碎片。<br><strong>存放的内容：</strong> 栈中存放的是局部变量，函数的参数；堆中存放的内容由程序员控制。</p>
+<span id="more"></span>
+
+<p><strong>问题1：堆的内存为什么是不连续的</strong></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418598.png"></p>
+<p><strong>问题2：堆和栈的不同点</strong></p>
+<p>管理方式：堆-程序员。栈-系统。</p>
+<p>空间大小：堆-不确定。栈-最大容量是系统设定好的。</p>
+<p>生长方向：堆-向高地址扩展，不连续。栈-向低地址扩展，连续。</p>
+<p>分配效率：堆-程序员申请，效率低，容易产生碎片。栈-系统分配，效率高，但是程序员不能控制。</p>
+<p>存放内容：堆-程序员自己申请的内容。栈-局部变量，函数参数等。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418580.png"></p>
+]]></content>
+      <categories>
+        <category>C++突击</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>19.删除链表的倒数第N个元素</title>
+    <url>/2022/09/04/19.%20%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%ACN%E4%B8%AA%E5%85%83%E7%B4%A0%20%20%20%20-%20%20%20%202022-09-04/</url>
+    <content><![CDATA[<p>给你一个链表，删除链表的倒数第N个结点并返回链链表的头结点。利用双指针中的快慢指针解决问题。</p>
+<span id="more"></span>
+<p><strong>【题目】</strong></p>
+<blockquote>
+<p>给你一个链表，删除链表的倒数第 <code>n</code> 个结点，并且返回链表的头结点。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209041513536.png"></p>
+</blockquote>
+<blockquote>
+<p><strong>分析：</strong></p>
+<p>对于链表而言，访问特定下标的元素是很困难的。</p>
+<p>我们做过三个相关的题目：</p>
+<p>1、设计链表：在特定的位置插入元素，特定的正向位置删除元素，这需要我们从虚拟头结点开始进行遍历。</p>
+<p>2、删除链表的中间节点：这时候我们并不知道应该删除的是哪一个下标，我们通过遍历得到链表的长度也不是现实的，所以我们可以选择利用指针移动之间的倍数关系来实现。即：双指针中的快慢指针，快指针一次走两个格，慢指针一次走一个格，当快指针走到头的时候，慢指针刚好走到了中央的位置。</p>
+<p>3、就是我们要删除倒数的元素了，我们可以让快的节点超过慢节点n个元素，当快节点到头的时候，慢节点刚好指向了倒数第n个元素。但需要注意的是，我们希望进行删除操作，所以我们需要在操作第N个元素的前一个节点，所以，判断关系很重要。</p>
+</blockquote>
+<hr>
+<p>【解答】</p>
+<p>双指针-快慢双指针法</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode() : val(0), next(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x, ListNode *next) : val(x), next(next) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">removeNthFromEnd</span><span class="params">(ListNode* head, <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        ListNode* prev = <span class="keyword">new</span> <span class="built_in">ListNode</span>(<span class="number">0</span>);</span><br><span class="line">        prev -&gt; next = head;</span><br><span class="line">        ListNode* slow = prev;</span><br><span class="line">        ListNode* fast = prev;</span><br><span class="line">        <span class="keyword">while</span> (n--) &#123;</span><br><span class="line">            fast = fast -&gt; next;</span><br><span class="line">            <span class="keyword">if</span> (fast == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> prev -&gt; next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (fast -&gt; next != <span class="literal">nullptr</span>) &#123; <span class="comment">// 要删掉的节点的前一个节点</span></span><br><span class="line">            fast = fast -&gt; next;</span><br><span class="line">            slow = slow -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        slow -&gt; next = slow -&gt; next -&gt; next;</span><br><span class="line">        <span class="keyword">return</span> prev -&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>LeetCode之链表</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>五星 C++ 内存管理</title>
     <url>/2022/09/01/%E4%BA%94%E6%98%9FC++%20%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%20-2022-08-29/</url>
     <content><![CDATA[<p>C++ 内存分区：<strong>栈、堆、全局&#x2F;静态存储区、常量存储区、代码区</strong>。</p>
@@ -47,29 +101,6 @@
       </tags>
   </entry>
   <entry>
-    <title>五星 C++ 堆和栈的区别</title>
-    <url>/2022/09/02/%E4%BA%94%E6%98%9F%20C++%E6%A0%88%E5%92%8C%E5%A0%86%E7%9A%84%E5%8C%BA%E5%88%AB%20%20%20-%20%20%20%202022-08-29/</url>
-    <content><![CDATA[<p><strong>申请方式：</strong> 栈是系统自动分配，堆是程序员主动申请。<strong>申请后系统响应：</strong>分配栈空间，如果剩余空间大于申请空间则分配成功，否则分配失败栈溢出；申请堆空间，堆在内存中呈现的方式类似于链表（记录空闲地址空间的链表），在链表上寻找第一个大于申请空间的节点分配给程序，将该节点从链表中删除，大多数系统中该块空间的首地址存放的是本次分配空间的大小，便于释放，将该块空间上的剩余空间再次连接在空闲链表上。<br>栈在内存中是连续的一块空间（向低地址扩展）<strong>最大容量是系统预定好的</strong>，堆在内存中的空间（向高地址扩展）是<strong>不连续</strong>的。<br><strong>申请效率：</strong> 栈是有系统自动分配，申请效率高，但程序员无法控制；堆是由程序员主动申请，效率低，使用起来方便但是容易产生碎片。<br><strong>存放的内容：</strong> 栈中存放的是局部变量，函数的参数；堆中存放的内容由程序员控制。</p>
-<span id="more"></span>
-
-<p><strong>问题1：堆的内存为什么是不连续的</strong></p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418598.png"></p>
-<p><strong>问题2：堆和栈的不同点</strong></p>
-<p>管理方式：堆-程序员。栈-系统。</p>
-<p>空间大小：堆-不确定。栈-最大容量是系统设定好的。</p>
-<p>生长方向：堆-向高地址扩展，不连续。栈-向低地址扩展，连续。</p>
-<p>分配效率：堆-程序员申请，效率低，容易产生碎片。栈-系统分配，效率高，但是程序员不能控制。</p>
-<p>存放内容：堆-程序员自己申请的内容。栈-局部变量，函数参数等。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418580.png"></p>
-]]></content>
-      <categories>
-        <category>C++突击</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>四星 C++ 变量的区别</title>
     <url>/2022/09/04/%E5%9B%9B%E6%98%9F%20C++%20%E5%8F%98%E9%87%8F%E7%9A%84%E5%8C%BA%E5%88%AB-2022-08-30/</url>
     <content><![CDATA[<p>全局变量、局部变量、静态全局变量、静态局部变量的区别<br>C++ 变量根据定义的位置的不同的生命周期，具有不同的作用域，作用域可分为 6 种：全局作用域，局部作用域，语句作用域，类作用域，命名空间作用域和文件作用域。</p>
@@ -96,6 +127,36 @@
 </blockquote>
 <p>include一个头文件，相当于把他带包写到了另一个文件，就会被多次定义。</p>
 <p><strong>所以全局变量应该被定义在源文件中。</strong> 其他程序使用，利用extern进行声明。</p>
+]]></content>
+      <categories>
+        <category>C++突击</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>四星 C++ 程序编译过程</title>
+    <url>/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/</url>
+    <content><![CDATA[<p>编译过程可以分为以下三个过程：编译（编译预处理、编译、优化），汇编，链接。<br>其中编译又可以分为编译预处理以及编译优化，就可以划分为四部分。</p>
+<span id="more"></span>
+
+<h2 id="1、编译预处理"><a href="#1、编译预处理" class="headerlink" title="1、编译预处理"></a>1、编译预处理</h2><p>编译预处理：处理以 # 开头的指令；</p>
+<p>例如：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> </span></span><br><span class="line"><span class="meta">#program once</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2、编译、优化"><a href="#2、编译、优化" class="headerlink" title="2、编译、优化"></a>2、编译、优化</h2><p>将源码 .cpp 文件翻译成 .s 汇编代码；</p>
+<h2 id="3、汇编"><a href="#3、汇编" class="headerlink" title="3、汇编"></a>3、汇编</h2><p>将汇编代码 .s 翻译成机器指令 .o 文件；</p>
+<h2 id="4、链接"><a href="#4、链接" class="headerlink" title="4、链接"></a>4、链接</h2><p>汇编程序生成的目标文件，即 .o 文件，并不会立即执行，因为可能会出现：.cpp 文件中的函数引用了另一个 .cpp 文件中定义的符号或者调用了某个库文件中的函数。那链接的目的就是将这些文件对应的目标文件连接成一个整体，从而生成可执行的程序 .exe 文件。</p>
+<p><strong>链接包括静态链接和动态链接</strong></p>
+<p><strong>静态链接</strong>：代码从其所在的静态链接库中拷贝到最终的可执行程序中，在该程序被执行时，这些代码会被装入到该进程的虚拟地址空间中。</p>
+<p>通俗的讲：静态链接将程序调用的库一起打包到可执行文件中，这样执行时候就不用调用其他的库，速度快。但是，可能多个文件都链接了同一个库，那么这个库就被打包了很多次，造成了该空间上的浪费。如果这个库更新了的话，整个程序需要重新编译。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038882.png" alt="静态链接"></p>
+<p><strong>动态链接</strong>：代码被放到动态链接库或共享对象的某个目标文件中，链接程序只是在最终的可执行程序中记录了共享对象的名字等一些信息。在程序执行时，动态链接库的全部内容会被映射到运行时相应进行的虚拟地址的空间。</p>
+<p>通俗的讲：动态链接是在程序执行时候才引入的库，因此方便更新。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038200.png" alt="动态链接"></p>
+<p>二者的优缺点：</p>
+<p>静态链接：<strong>浪费空间，</strong>每个可执行程序都会有目标文件的一个副本，这样如果目标文件进行了更新操作，就需要重新进行编译链接生成可执行程序<strong>（更新困难）</strong>；优点就是执行的时候运行<strong>速度快，</strong> 因为可执行程序具备了程序运行的所有内容。<br>动态链接：<strong>节省内存、更新方便</strong>，但是动态链接是在程序运行时，每次执行都需要链接，<strong>相比静态链接会有一定的性能损失。</strong></p>
 ]]></content>
       <categories>
         <category>C++突击</category>
@@ -154,36 +215,6 @@
       </categories>
       <tags>
         <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>四星 C++ 程序编译过程</title>
-    <url>/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/</url>
-    <content><![CDATA[<p>编译过程可以分为以下三个过程：编译（编译预处理、编译、优化），汇编，链接。<br>其中编译又可以分为编译预处理以及编译优化，就可以划分为四部分。</p>
-<span id="more"></span>
-
-<h2 id="1、编译预处理"><a href="#1、编译预处理" class="headerlink" title="1、编译预处理"></a>1、编译预处理</h2><p>编译预处理：处理以 # 开头的指令；</p>
-<p>例如：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> </span></span><br><span class="line"><span class="meta">#program once</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="2、编译、优化"><a href="#2、编译、优化" class="headerlink" title="2、编译、优化"></a>2、编译、优化</h2><p>将源码 .cpp 文件翻译成 .s 汇编代码；</p>
-<h2 id="3、汇编"><a href="#3、汇编" class="headerlink" title="3、汇编"></a>3、汇编</h2><p>将汇编代码 .s 翻译成机器指令 .o 文件；</p>
-<h2 id="4、链接"><a href="#4、链接" class="headerlink" title="4、链接"></a>4、链接</h2><p>汇编程序生成的目标文件，即 .o 文件，并不会立即执行，因为可能会出现：.cpp 文件中的函数引用了另一个 .cpp 文件中定义的符号或者调用了某个库文件中的函数。那链接的目的就是将这些文件对应的目标文件连接成一个整体，从而生成可执行的程序 .exe 文件。</p>
-<p><strong>链接包括静态链接和动态链接</strong></p>
-<p><strong>静态链接</strong>：代码从其所在的静态链接库中拷贝到最终的可执行程序中，在该程序被执行时，这些代码会被装入到该进程的虚拟地址空间中。</p>
-<p>通俗的讲：静态链接将程序调用的库一起打包到可执行文件中，这样执行时候就不用调用其他的库，速度快。但是，可能多个文件都链接了同一个库，那么这个库就被打包了很多次，造成了该空间上的浪费。如果这个库更新了的话，整个程序需要重新编译。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038882.png" alt="静态链接"></p>
-<p><strong>动态链接</strong>：代码被放到动态链接库或共享对象的某个目标文件中，链接程序只是在最终的可执行程序中记录了共享对象的名字等一些信息。在程序执行时，动态链接库的全部内容会被映射到运行时相应进行的虚拟地址的空间。</p>
-<p>通俗的讲：动态链接是在程序执行时候才引入的库，因此方便更新。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038200.png" alt="动态链接"></p>
-<p>二者的优缺点：</p>
-<p>静态链接：<strong>浪费空间，</strong>每个可执行程序都会有目标文件的一个副本，这样如果目标文件进行了更新操作，就需要重新进行编译链接生成可执行程序<strong>（更新困难）</strong>；优点就是执行的时候运行<strong>速度快，</strong> 因为可执行程序具备了程序运行的所有内容。<br>动态链接：<strong>节省内存、更新方便</strong>，但是动态链接是在程序运行时，每次执行都需要链接，<strong>相比静态链接会有一定的性能损失。</strong></p>
-]]></content>
-      <categories>
-        <category>C++突击</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
       </tags>
   </entry>
   <entry>
@@ -358,6 +389,29 @@
       </tags>
   </entry>
   <entry>
+    <title>解决typora提示:This beta version of Typora is expired</title>
+    <url>/2022/08/27/%E8%A7%A3%E5%86%B3typora%E6%8F%90%E7%A4%BAThis%20beta%20version%20of%20Typora%20is%20expired/</url>
+    <content><![CDATA[<p>解决typora提示This beta version of Typora is expired, please download and install a newer version<br>自从typora付费之后也没有怎么使用，后来做git仓库+picgo+typora联动的时候，再次打开typora，弹出了以下窗口：</p>
+<span id="more"></span>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271020322.png" alt="ERROR提示"></p>
+<p>我重新下载了付费版本的typora然后然后开启了15天尝鲜。但是我发现之后再想用typora打开md文档的时候依然会出现这个提示框，并且无论是点击确定还是×掉都依然会跳转到typora的安装界面。</p>
+<p>这个错误提示大概的意思就是beta版本的typora已经过，需要下载最新版本。</p>
+<p>在网上查找了一圈解决办法，目前通过修改注册表解决了我的问题。</p>
+<p>以下是解决步骤：</p>
+<p>1、win+r 打开运行窗口 &amp;#x20;<br>2、在搜索栏输入regedit，回车后打开注册表 &amp;#x20;<br>3、在注册表中找到：计算机\HKEY_CURRENT_USER\Software\Typora &amp;#x20;<br>4、鼠标右键Typora，选择权限 &amp;#x20;<br>5、选择Administraors，将下面的权限选择为拒绝</p>
+<p>点击应用的时候可能会出现提醒，点确定就行了。最后保存设置。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271021324.png" alt="修改typora权限"></p>
+<p>6、重新打开typora，就可以正常应用了。</p>
+<p>以上就是问题的解决方法。</p>
+]]></content>
+      <categories>
+        <category>一些奇奇怪怪的问题之windows</category>
+      </categories>
+      <tags>
+        <tag>typora</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>视觉SLAM十四讲-第二讲：初识SLAM</title>
     <url>/2022/08/26/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E4%B9%8B%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
     <content><![CDATA[<p>本文主要介绍视觉SLAM十四讲中第二讲的关键内容。</p>
@@ -392,29 +446,6 @@
       </categories>
       <tags>
         <tag>SLAM</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>解决typora提示:This beta version of Typora is expired</title>
-    <url>/2022/08/27/%E8%A7%A3%E5%86%B3typora%E6%8F%90%E7%A4%BAThis%20beta%20version%20of%20Typora%20is%20expired/</url>
-    <content><![CDATA[<p>解决typora提示This beta version of Typora is expired, please download and install a newer version<br>自从typora付费之后也没有怎么使用，后来做git仓库+picgo+typora联动的时候，再次打开typora，弹出了以下窗口：</p>
-<span id="more"></span>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271020322.png" alt="ERROR提示"></p>
-<p>我重新下载了付费版本的typora然后然后开启了15天尝鲜。但是我发现之后再想用typora打开md文档的时候依然会出现这个提示框，并且无论是点击确定还是×掉都依然会跳转到typora的安装界面。</p>
-<p>这个错误提示大概的意思就是beta版本的typora已经过，需要下载最新版本。</p>
-<p>在网上查找了一圈解决办法，目前通过修改注册表解决了我的问题。</p>
-<p>以下是解决步骤：</p>
-<p>1、win+r 打开运行窗口 &amp;#x20;<br>2、在搜索栏输入regedit，回车后打开注册表 &amp;#x20;<br>3、在注册表中找到：计算机\HKEY_CURRENT_USER\Software\Typora &amp;#x20;<br>4、鼠标右键Typora，选择权限 &amp;#x20;<br>5、选择Administraors，将下面的权限选择为拒绝</p>
-<p>点击应用的时候可能会出现提醒，点确定就行了。最后保存设置。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271021324.png" alt="修改typora权限"></p>
-<p>6、重新打开typora，就可以正常应用了。</p>
-<p>以上就是问题的解决方法。</p>
-]]></content>
-      <categories>
-        <category>一些奇奇怪怪的问题之windows</category>
-      </categories>
-      <tags>
-        <tag>typora</tag>
       </tags>
   </entry>
 </search>
