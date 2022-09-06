@@ -1,26 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>五星 C++ 堆和栈的区别</title>
-    <url>/2022/09/02/%E4%BA%94%E6%98%9F%20C++%E6%A0%88%E5%92%8C%E5%A0%86%E7%9A%84%E5%8C%BA%E5%88%AB%20%20%20-%20%20%20%202022-08-29/</url>
-    <content><![CDATA[<p><strong>申请方式：</strong> 栈是系统自动分配，堆是程序员主动申请。<strong>申请后系统响应：</strong>分配栈空间，如果剩余空间大于申请空间则分配成功，否则分配失败栈溢出；申请堆空间，堆在内存中呈现的方式类似于链表（记录空闲地址空间的链表），在链表上寻找第一个大于申请空间的节点分配给程序，将该节点从链表中删除，大多数系统中该块空间的首地址存放的是本次分配空间的大小，便于释放，将该块空间上的剩余空间再次连接在空闲链表上。<br>栈在内存中是连续的一块空间（向低地址扩展）<strong>最大容量是系统预定好的</strong>，堆在内存中的空间（向高地址扩展）是<strong>不连续</strong>的。<br><strong>申请效率：</strong> 栈是有系统自动分配，申请效率高，但程序员无法控制；堆是由程序员主动申请，效率低，使用起来方便但是容易产生碎片。<br><strong>存放的内容：</strong> 栈中存放的是局部变量，函数的参数；堆中存放的内容由程序员控制。</p>
+    <title>142.环形链表II</title>
+    <url>/2022/09/06/142.%20%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8II%20%20%20%20-%20%20%20%202022-09-06/</url>
+    <content><![CDATA[<p>给定一个链表的头节点  head ，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
 <span id="more"></span>
+<p><strong>【题目】</strong></p>
+<blockquote>
+<p>给定一个链表的头节点  head ，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
+<p>不允许修改 链表。</p>
+<p>来源：力扣（LeetCode）<br>链接：<a href="https://leetcode.cn/problems/linked-list-cycle-ii" title="https://leetcode.cn/problems/linked-list-cycle-ii">https://leetcode.cn/problems/linked-list-cycle-ii</a></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209062058561.png"></p>
+</blockquote>
+<blockquote>
+<p>分析：</p>
+<p>主要考察两知识点：</p>
+<ul>
+<li><p>判断链表是否环</p>
+</li>
+<li><p>如果有环，如何找到这个环的入口</p>
+</li>
+</ul>
+</blockquote>
+<hr>
+<p>【解答】</p>
+<p>1、快慢指针 - 常规方法</p>
+<p>时间复杂度：O(n)</p>
+<p>空间复杂度：O(1)</p>
+<p>分两个步骤进行</p>
+<p>①利用快慢指针判断链表是否存在环</p>
+<p>这个道理就是一个人一步步跑，另一个人两步两步跑，最后第二个人超越了第一个人一圈，让然后相遇了。如果说不存在环的话，那么快指针会先跑到终点，指向nullptr</p>
+<p>②利用双指针判断环的入口-这里涉及到数学推导</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209062058518.png" alt="题目说明"></p>
+<p>最终x &#x3D; z ；x是我们想要去求解的量，在fast指针和slow指针相遇后，让fast指针一步步走。让slow从头节点开始一步步走，重合的时候就是结点所在的位置。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode *<span class="title">detectCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">    ListNode* slow = head;</span><br><span class="line">    ListNode* fast = head;</span><br><span class="line">    <span class="keyword">while</span> (fast != <span class="literal">nullptr</span> &amp;&amp; fast -&gt; next !=<span class="literal">nullptr</span>) &#123; </span><br><span class="line">      <span class="comment">// 保证 fast -&gt; next ;以及 fast -&gt; next -&gt; next 存在</span></span><br><span class="line">      slow = slow -&gt; next;</span><br><span class="line">      fast = fast -&gt; next -&gt; next; <span class="comment">//由于这里向后移动了两次，为了保证不会出现空指针指向空指针</span></span><br><span class="line">      <span class="comment">//判断条件那里需要格外小心</span></span><br><span class="line">      <span class="keyword">if</span> (fast == slow) &#123;  <span class="comment">// 两个节点相遇</span></span><br><span class="line">        slow = head;</span><br><span class="line">        <span class="keyword">while</span> (slow != fast) &#123;</span><br><span class="line">        slow = slow -&gt; next;</span><br><span class="line">        fast = fast -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> slow;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<p><strong>问题1：堆的内存为什么是不连续的</strong></p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418598.png"></p>
-<p><strong>问题2：堆和栈的不同点</strong></p>
-<p>管理方式：堆-程序员。栈-系统。</p>
-<p>空间大小：堆-不确定。栈-最大容量是系统设定好的。</p>
-<p>生长方向：堆-向高地址扩展，不连续。栈-向低地址扩展，连续。</p>
-<p>分配效率：堆-程序员申请，效率低，容易产生碎片。栈-系统分配，效率高，但是程序员不能控制。</p>
-<p>存放内容：堆-程序员自己申请的内容。栈-局部变量，函数参数等。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418580.png"></p>
+<p>2、map&#x2F;unordered_map - 常规方法</p>
+<p>最基本的想法，创建一个键值表，如果出现了曾经出现过的节点就可以返回了。</p>
+<p>时间复杂度：底层基于红黑树的<code>map</code>，在查找某个元素的时候，采用二分查找的办法，时间为<code>O(lgn)</code>；链表n个节点，时间复杂度<code>O(nlgn)</code>. 反之，如果是无序的unordered_map，元素没有排序，所以时间复杂度为<code>O(n)</code></p>
+<p>空间复杂度：创建了一个哈希表 O（n）；</p>
+<p>利用map 进行实现：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode *<span class="title">detectCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">if</span> (!head) &#123; <span class="comment">//如果链表是空的直接返回NULL</span></span><br><span class="line">       <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">     &#125;</span><br><span class="line">     map&lt;ListNode*, <span class="type">int</span>&gt; key;  <span class="comment">// 创建map</span></span><br><span class="line">     ListNode* pcur = head;</span><br><span class="line">     <span class="keyword">while</span> (pcur) &#123; <span class="comment">//当指针不为空的时候就进行</span></span><br><span class="line">     <span class="comment">//先判断是否出现过当前的指针，出现了就直接返回</span></span><br><span class="line">     <span class="keyword">if</span> (key.<span class="built_in">find</span>(pcur) != key.<span class="built_in">end</span>()) &#123; <span class="comment">//发现当前指针对应的并不是map的末尾，说明出现过，那就是环</span></span><br><span class="line">     <span class="keyword">return</span> pcur;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="comment">//没出现就添加到map里面</span></span><br><span class="line">     <span class="keyword">else</span> &#123;</span><br><span class="line">       key[pcur] = key[pcur] + <span class="number">1</span>;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="comment">//指针向前移动</span></span><br><span class="line">     pcur = pcur -&gt; next;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span> <span class="literal">NULL</span>; <span class="comment">// 直到遍历完了 末尾空指针跳出了循环说明没有环出现</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>3、野路子-非常规方法</p>
+<p>时间复杂度O(n)</p>
+<p>空间复杂度O(1)</p>
+<p>链表是在堆上申请的空间，从低向高，如果是按顺序进行链表节点内存的申请，那么我们在环的那一点，一定存在 head → next 小于head；利用这个规律，复杂度为O（n），可以比较快速的解决问题。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode *<span class="title">detectCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">while</span> (head != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">less</span>&lt;ListNode*&gt;()(head,head-&gt;next)) <span class="comment">// !(head地址小于head -&gt; next)</span></span><br><span class="line">        &#123;</span><br><span class="line">        <span class="keyword">return</span> head -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        head = head -&gt; next;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">NULL</span>;    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>C++突击</category>
+        <category>LeetCode之链表</category>
       </categories>
       <tags>
         <tag>c++</tag>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>160.相交链表</title>
+    <url>/2022/09/06/160.%20%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8%20%20%20%20-%20%20%20%202022-09-06/</url>
+    <content><![CDATA[<p>给你两个单链表的头节点 <code>headA</code> 和 <code>headB</code> ，请你找出并返回两个单链表相交的起始节点。</p>
+<span id="more"></span>
+<p><strong>【题目】</strong></p>
+<blockquote>
+<p>给你两个单链表的头节点 <code>headA</code> 和 <code>headB</code> ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 <code>null</code> 。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209062059291.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209062059102.png"></p>
+</blockquote>
+<blockquote>
+<p>分析：对我而言，这道问题的关键在于相交的定义。相交之后的全部节点都是相同的。因此如果存在相交，两个链表的末端应该是相等的。那么最长的情况就是，长的链表完全包含短的链表。所以我们需要对两个链表进行尾端对齐。</p>
+</blockquote>
+<hr>
+<p>【解答】</p>
+<p>1、 尾端对齐</p>
+<p>时间复杂度O（m+n）,空间复杂度O（1）</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode *<span class="title">getIntersectionNode</span><span class="params">(ListNode *headA, ListNode *headB)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 链表相交代表 相交后的节点都完全一致，最长就是完全覆盖短的链表，短的链表一直到长链表的尾部都重合。</span></span><br><span class="line">        <span class="comment">// 因此，先将链表的尾部对齐，只要是相交，尾部都是对齐的。</span></span><br><span class="line">        <span class="type">int</span> lenA = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> lenB = <span class="number">0</span>;</span><br><span class="line">        ListNode* curA = headA;</span><br><span class="line">        ListNode* curB = headB;</span><br><span class="line">        <span class="comment">//获得链表A长度</span></span><br><span class="line">        <span class="keyword">while</span> (curA -&gt; next != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            lenA++;</span><br><span class="line">            curA = curA -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//获得链表B长度</span></span><br><span class="line">        <span class="keyword">while</span> (curB -&gt; next != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            lenB++;</span><br><span class="line">            curB = curB -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//将curA curB置位</span></span><br><span class="line">        curB = headB;</span><br><span class="line">        curA = headA;</span><br><span class="line">        <span class="comment">//将长度更长的置为 A</span></span><br><span class="line">        <span class="keyword">while</span> (lenA &lt; lenB) &#123;</span><br><span class="line">            <span class="built_in">swap</span> (lenA, lenB);</span><br><span class="line">            <span class="built_in">swap</span> (curA, curB);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> n = lenA - lenB;</span><br><span class="line">        <span class="keyword">while</span> (n--) &#123;</span><br><span class="line">            curA = curA -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (curA != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (curA == curB) &#123;</span><br><span class="line">                <span class="keyword">return</span> curA;</span><br><span class="line">            &#125;</span><br><span class="line">            curA = curA -&gt; next;</span><br><span class="line">            curB = curB -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>LeetCode之链表</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+        <tag>LeetCode</tag>
       </tags>
   </entry>
   <entry>
@@ -52,6 +114,29 @@
       <tags>
         <tag>c++</tag>
         <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>五星 C++ 堆和栈的区别</title>
+    <url>/2022/09/02/%E4%BA%94%E6%98%9F%20C++%E6%A0%88%E5%92%8C%E5%A0%86%E7%9A%84%E5%8C%BA%E5%88%AB%20%20%20-%20%20%20%202022-08-29/</url>
+    <content><![CDATA[<p><strong>申请方式：</strong> 栈是系统自动分配，堆是程序员主动申请。<strong>申请后系统响应：</strong>分配栈空间，如果剩余空间大于申请空间则分配成功，否则分配失败栈溢出；申请堆空间，堆在内存中呈现的方式类似于链表（记录空闲地址空间的链表），在链表上寻找第一个大于申请空间的节点分配给程序，将该节点从链表中删除，大多数系统中该块空间的首地址存放的是本次分配空间的大小，便于释放，将该块空间上的剩余空间再次连接在空闲链表上。<br>栈在内存中是连续的一块空间（向低地址扩展）<strong>最大容量是系统预定好的</strong>，堆在内存中的空间（向高地址扩展）是<strong>不连续</strong>的。<br><strong>申请效率：</strong> 栈是有系统自动分配，申请效率高，但程序员无法控制；堆是由程序员主动申请，效率低，使用起来方便但是容易产生碎片。<br><strong>存放的内容：</strong> 栈中存放的是局部变量，函数的参数；堆中存放的内容由程序员控制。</p>
+<span id="more"></span>
+
+<p><strong>问题1：堆的内存为什么是不连续的</strong></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418598.png"></p>
+<p><strong>问题2：堆和栈的不同点</strong></p>
+<p>管理方式：堆-程序员。栈-系统。</p>
+<p>空间大小：堆-不确定。栈-最大容量是系统设定好的。</p>
+<p>生长方向：堆-向高地址扩展，不连续。栈-向低地址扩展，连续。</p>
+<p>分配效率：堆-程序员申请，效率低，容易产生碎片。栈-系统分配，效率高，但是程序员不能控制。</p>
+<p>存放内容：堆-程序员自己申请的内容。栈-局部变量，函数参数等。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418580.png"></p>
+]]></content>
+      <categories>
+        <category>C++突击</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
       </tags>
   </entry>
   <entry>
