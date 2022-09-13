@@ -117,6 +117,27 @@
       </tags>
   </entry>
   <entry>
+    <title>三星 C++ 怎么防止内存泄漏</title>
+    <url>/2022/09/13/%E4%B8%89%E6%98%9F%20%E6%80%8E%E4%B9%88%E9%98%B2%E6%AD%A2%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%EF%BC%9F%20%20%20%20-%20%20%20%202022-09-05/</url>
+    <content><![CDATA[<p>内存泄漏将会导致系统内存中无用的空间越来越多，最终导致内存不足，内存爆炸。所以，有必要防止内存泄漏。本文介绍了两种防止内存泄漏的方法以及内存泄漏检测工具valgrind的实现原理。</p>
+<span id="more"></span>
+<h2 id="1、防止内存泄漏"><a href="#1、防止内存泄漏" class="headerlink" title="1、防止内存泄漏"></a>1、防止内存泄漏</h2><h3 id="1、内部封装"><a href="#1、内部封装" class="headerlink" title="1、内部封装"></a>1、内部封装</h3><p>将内存的分配和释放封装到类中。在类中构造构造函数和析构函数。构造的时候分配内存空间，最后从析构函数中释放内存空间。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="type">char</span> p*;</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> p_size;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">A</span>(<span class="type">unsigned</span> <span class="type">int</span> n = <span class="number">1</span>) &#123;</span><br><span class="line">    p = <span class="keyword">new</span> <span class="type">char</span>[n]; <span class="comment">// 构造函数分配内存</span></span><br><span class="line">    p_size = n;</span><br><span class="line">  &#125;</span><br><span class="line">  ~<span class="built_in">A</span>() &#123;</span><br><span class="line">    <span class="keyword">if</span> (p != <span class="literal">NULL</span>) &#123;</span><br><span class="line">     <span class="keyword">delete</span>[] p; <span class="comment">// 删除字符数组的内存空间，在堆上</span></span><br><span class="line">     p = <span class="literal">NULL</span>;  <span class="comment">// p指向的空间已经被删除了，给p重新赋值，避免出现野指针。</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>该方法不是最佳的做法，因为在类的对象复制时，程序会出现同一块内存空间释放两次的情况。</p>
+<p>在一个函数内创建两个类的对象，让一个对象等于另一个对象。在离开函数作用域的时候，将会调用两次析构函数来释放空间，但是两个对象指向同一块内存，所以同一块内存就被释放了两次。** 可以通过增加计数机制来避免这种情况**；</p>
+<h3 id="2、智能指针"><a href="#2、智能指针" class="headerlink" title="2、智能指针"></a>2、智能指针</h3><p>智能指针是 C++ 中已经对内存泄漏封装好了一个工具，可以直接拿来使用。可以自己计数。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209132043830.png"></p>
+<p><img data-src="/image/image_VK2HHXZfof.png"></p>
+]]></content>
+      <categories>
+        <category>c++突击</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>五星 C++ 堆和栈的区别</title>
     <url>/2022/09/02/%E4%BA%94%E6%98%9F%20C++%E6%A0%88%E5%92%8C%E5%A0%86%E7%9A%84%E5%8C%BA%E5%88%AB%20%20%20-%20%20%20%202022-08-29/</url>
     <content><![CDATA[<p><strong>申请方式：</strong> 栈是系统自动分配，堆是程序员主动申请。<strong>申请后系统响应：</strong>分配栈空间，如果剩余空间大于申请空间则分配成功，否则分配失败栈溢出；申请堆空间，堆在内存中呈现的方式类似于链表（记录空闲地址空间的链表），在链表上寻找第一个大于申请空间的节点分配给程序，将该节点从链表中删除，大多数系统中该块空间的首地址存放的是本次分配空间的大小，便于释放，将该块空间上的剩余空间再次连接在空闲链表上。<br>栈在内存中是连续的一块空间（向低地址扩展）<strong>最大容量是系统预定好的</strong>，堆在内存中的空间（向高地址扩展）是<strong>不连续</strong>的。<br><strong>申请效率：</strong> 栈是有系统自动分配，申请效率高，但程序员无法控制；堆是由程序员主动申请，效率低，使用起来方便但是容易产生碎片。<br><strong>存放的内容：</strong> 栈中存放的是局部变量，函数的参数；堆中存放的内容由程序员控制。</p>
@@ -134,6 +155,113 @@
 ]]></content>
       <categories>
         <category>C++突击</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>五星 C++ 智能指针的分类、实现原理、易出现的问题</title>
+    <url>/2022/09/13/%E4%BA%94%E6%98%9F%20%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E7%9A%84%E5%88%86%E7%B1%BB%E3%80%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E3%80%81%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98%20%20%20-%20%20%20%202022-09-05/</url>
+    <content><![CDATA[<p>智能指针是高频考察内容；本文讲述了智能指针的分类，实现原理以及容易出现的问题及其解决方式。</p>
+<p>智能指针是为了解决动态内存分配时带来的内存泄漏以及多次释放同一块内存空间而提出的。C++11 中封装在了 <code>&lt;memory&gt;</code> 头文件中。</p>
+<span id="more"></span>
+
+<p>C++11 中智能指针包括以下三种：</p>
+<ul>
+<li><p><strong>共享指针（shared_ptr）</strong>：资源可以被多个指针共享，使用计数机制表明资源被几个指针共享。通过 <code>use_count()</code> 查看资源的所有者的个数，可以通过 <code>unique_ptr</code>、<code>weak_ptr</code> 来构造，调用 <code>release()</code> 释放资源的所有权，计数减一，当计数减为 0 时，会自动释放内存空间，从而避免了内存泄漏。</p>
+</li>
+<li><p><strong>独占指针（unique_ptr）</strong>：独享所有权的智能指针，资源只能被一个指针占有，该指针不能拷贝构造和赋值。但可以进行移动构造和移动赋值构造（调用 <code>move()</code> 函数），即一个 <code>unique_ptr</code> 对象赋值给另一个 <code>unique_ptr</code> 对象，可以通过该方法进行赋值。</p>
+</li>
+<li><p><strong>弱指针（weak_ptr）</strong>：指向 <code>share_ptr</code> 指向的对象，能够解决由shared_ptr带来的循环引用问题。</p>
+</li>
+</ul>
+<p>智能指针的实现原理是计数原理。</p>
+<blockquote>
+<p>在C++中没有垃圾回收机制，必须自己释放分配的内存，否则就会造成内存泄露。解决这个问题最有效的方法是使用智能指针（smart pointer）。智能指针是存储指向动态分配（堆）对象指针的类，用于生存期的控制，能够确保在离开指针所在作用域时，自动地销毁动态分配的对象，防止内存泄露。智能指针的核心实现技术是引用计数，每使用它一次，内部引用计数加1，每析构一次内部的引用计数减1，减为0时，删除所指向的堆内存。</p>
+</blockquote>
+<h2 id="1、共享指针（shared-ptr）"><a href="#1、共享指针（shared-ptr）" class="headerlink" title="1、共享指针（shared_ptr）"></a>1、共享指针（shared_ptr）</h2><h3 id="1、初始化"><a href="#1、初始化" class="headerlink" title="1、初始化"></a>1、初始化</h3><blockquote>
+<p>共享智能指针是指多个智能指针可以同时管理同一块有效的内存，共享智能指针shared_ptr 是一个模板类，如果要进行初始化有三种方式：通过构造函数、std::make_shared辅助函数以及reset方法。共享智能指针对象初始化完毕之后就指向了要管理的那块堆内存，如果想要查看当前有多少个智能指针同时管理着这块内存可以使用共享智能指针提供的一个成员函数use_count。<strong>如果我们不初始化一个智能指针，他会被初始化为一个空指针 。</strong></p>
+</blockquote>
+<h3 id="2、获得原始地址"><a href="#2、获得原始地址" class="headerlink" title="2、获得原始地址"></a>2、获得原始地址</h3><blockquote>
+<p>利用get()获得原地址；对应基础数据类型来说，通过操作智能指针和操作智能指针管理的内存效果是一样的，可以直接完成数据的读写。但是如果共享智能指针管理的是一个对象，那么就需要取出原始内存的地址再操作，可以调用共享智能指针类提供的get()方法得到原始地址</p>
+</blockquote>
+<h3 id="3、指定删除器"><a href="#3、指定删除器" class="headerlink" title="3、指定删除器"></a>3、指定删除器</h3><blockquote>
+<p>当智能指针管理的内存对应的引用计数变为0的时候，这块内存就会被智能指针析构掉了。另外，我们在初始化智能指针的时候也可以自己指定删除动作，这个删除操作对应的函数被称之为删除器，这个删除器函数本质是一个回调函数，我们只需要进行实现，其调用是由智能指针完成的。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Test</span>() : <span class="built_in">m_num</span>(<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;construct Test...&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">Test</span>(<span class="type">int</span> x) : <span class="built_in">m_num</span>(<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;construct Test, x = &quot;</span> &lt;&lt; x &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">Test</span>(string str) : <span class="built_in">m_num</span>(<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;construct Test, str = &quot;</span> &lt;&lt; str &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    ~<span class="built_in">Test</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;destruct Test...&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setValue</span><span class="params">(<span class="type">int</span> v)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;m_num = v;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;m_num: &quot;</span> &lt;&lt; <span class="keyword">this</span>-&gt;m_num &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> m_num;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/*--------------------------  一，初始化智能指针shared_ptr  ------------------------------*/</span></span><br><span class="line">    <span class="comment">//1.通过构造函数初始化</span></span><br><span class="line">    <span class="function">shared_ptr&lt;<span class="type">int</span>&gt; <span class="title">ptr1</span><span class="params">(<span class="keyword">new</span> <span class="type">int</span>(<span class="number">3</span>))</span></span>;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;ptr1管理的内存引用计数: &quot;</span> &lt;&lt; ptr1.<span class="built_in">use_count</span>() &lt;&lt; endl;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//2.通过移动和拷贝构造函数初始化</span></span><br><span class="line">    shared_ptr&lt;<span class="type">int</span>&gt; ptr2 = <span class="built_in">move</span>(ptr1);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;ptr1管理的内存引用计数: &quot;</span> &lt;&lt; ptr1.<span class="built_in">use_count</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;ptr2管理的内存引用计数: &quot;</span> &lt;&lt; ptr2.<span class="built_in">use_count</span>() &lt;&lt; endl;</span><br><span class="line"> </span><br><span class="line">    shared_ptr&lt;<span class="type">int</span>&gt; ptr3 = ptr2;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;ptr2管理的内存引用计数: &quot;</span> &lt;&lt; ptr2.<span class="built_in">use_count</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;ptr3管理的内存引用计数: &quot;</span> &lt;&lt; ptr3.<span class="built_in">use_count</span>() &lt;&lt; endl;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//3.通过 std::make_shared初始化 这种初始化方法是最好的</span></span><br><span class="line">    shared_ptr&lt;<span class="type">int</span>&gt; ptr4 = <span class="built_in">make_shared</span>&lt;<span class="type">int</span>&gt;(<span class="number">8</span>);</span><br><span class="line">    shared_ptr&lt;Test&gt; ptr5 = <span class="built_in">make_shared</span>&lt;Test&gt;(<span class="number">7</span>);</span><br><span class="line">    shared_ptr&lt;Test&gt; ptr6 = <span class="built_in">make_shared</span>&lt;Test&gt;(<span class="string">&quot;GOOD LUCKLY!&quot;</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//4.通过reset初始化</span></span><br><span class="line">    ptr6.<span class="built_in">reset</span>(); <span class="comment">//重置ptr6, ptr6的引用基数为0</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;ptr6管理的内存引用计数: &quot;</span> &lt;&lt; ptr6.<span class="built_in">use_count</span>() &lt;&lt; endl;</span><br><span class="line"> </span><br><span class="line">    ptr5.<span class="built_in">reset</span>(<span class="keyword">new</span> <span class="built_in">Test</span>(<span class="string">&quot;hello&quot;</span>));</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;ptr5管理的内存引用计数: &quot;</span> &lt;&lt; ptr5.<span class="built_in">use_count</span>() &lt;&lt; endl;</span><br><span class="line"> </span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/*--------------------------  二，共享智能指针shared_ptr的使用  ------------------------------*/</span></span><br><span class="line">    <span class="comment">//1.方法一</span></span><br><span class="line">    Test* t = ptr5.<span class="built_in">get</span>();</span><br><span class="line">    t-&gt;<span class="built_in">setValue</span>(<span class="number">1000</span>);</span><br><span class="line">    t-&gt;<span class="built_in">print</span>();</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//2.方法二</span></span><br><span class="line">    ptr5-&gt;<span class="built_in">setValue</span>(<span class="number">7777</span>);</span><br><span class="line">    ptr5-&gt;<span class="built_in">print</span>();</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n\n&quot;</span>);</span><br><span class="line">    <span class="comment">/*------------------------------------  三，指定删除器  -----------------------------------*/</span></span><br><span class="line">     <span class="comment">//1.简单举例</span></span><br><span class="line">    <span class="function">shared_ptr&lt;Test&gt; <span class="title">ppp</span><span class="params">(<span class="keyword">new</span> Test(<span class="number">100</span>), [](Test* t) &#123;</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="comment">//释放内存</span></span></span></span><br><span class="line"><span class="params"><span class="function">        cout &lt;&lt; <span class="string">&quot;Test对象的内存被释放了.......&quot;</span> &lt;&lt; endl;</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="keyword">delete</span> t;</span></span></span><br><span class="line"><span class="params"><span class="function">        &#125;)</span></span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;----------------------------------------------------------------------\n&quot;</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="number">2.</span>如果是数组类型的地址，就需要自己写指定删除器，否则内存无法全部释放</span><br><span class="line">    <span class="comment">//shared_ptr&lt;Test&gt; p1(new Test[5], [](Test* t) &#123;</span></span><br><span class="line">    <span class="comment">//    delete[]t;</span></span><br><span class="line">    <span class="comment">//    &#125;);</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">//3.也可以使用c++给我们提供的 默认删除器函数（函数模板）</span></span><br><span class="line">    <span class="function">shared_ptr&lt;Test&gt; <span class="title">p2</span><span class="params">(<span class="keyword">new</span> Test[<span class="number">3</span>], default_delete&lt;Test[]&gt;())</span></span>;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//4.c++11以后可以这样写 也可以自动释放内存</span></span><br><span class="line">    <span class="function">shared_ptr&lt;Test[]&gt; <span class="title">p3</span><span class="params">(<span class="keyword">new</span> Test[<span class="number">3</span>])</span></span>;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>另外，我们还可以自己封装一个函数模板make_shared_array方法来让shared_ptr支持数组，代码如下:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//有了这个函数模板，我们就不用自己去释放数组类型的地址了</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function">shared_ptr&lt;T&gt; <span class="title">make_share_array</span><span class="params">(<span class="type">size_t</span> size)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//返回匿名对象</span></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">shared_ptr</span>&lt;T&gt;(<span class="keyword">new</span> T[size], <span class="built_in">default_delete</span>&lt;T[]&gt;());</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  shared_ptr&lt;<span class="type">int</span>&gt; ptr1 = <span class="built_in">make_share_array</span>&lt;<span class="type">int</span>&gt;(<span class="number">10</span>);</span><br><span class="line">  cout &lt;&lt; ptr1.<span class="built_in">use_count</span>() &lt;&lt; endl;</span><br><span class="line"> </span><br><span class="line">  shared_ptr&lt;string&gt; ptr2 = <span class="built_in">make_share_array</span>&lt;string&gt;(<span class="number">7</span>);</span><br><span class="line">  cout &lt;&lt; ptr2.<span class="built_in">use_count</span>() &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>最安全的分配和使用动态内存的方法是调用make_shared标准库函数。此函数在动态内存中分配一个对象并从初始化它，返回指向此对象的shared_ptr。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">shared_ptr&lt;<span class="type">int</span>&gt; ptr1 = <span class="built_in">make_shared</span>&lt;<span class="type">int</span>&gt; (<span class="number">42</span>);</span><br><span class="line"><span class="comment">//要指定类型和初始化的内容，指向一个值为42的int类型的智能指针。</span></span><br></pre></td></tr></table></figure>
+
+<p>我们不能将一个内置指针转换为一个智能指针：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">shared_ptr&lt;<span class="type">int</span>&gt; ptr1 = <span class="keyword">new</span> <span class="built_in">int</span>(<span class="number">100</span>);<span class="comment">//这种是错误的</span></span><br><span class="line"><span class="function">shared_ptr&lt;<span class="type">int</span>&gt; <span class="title">ptr1</span><span class="params">(<span class="keyword">new</span> <span class="type">int</span>(<span class="number">100</span>))</span></span>; <span class="comment">//这种是正确的</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2、独占指针-unique-ptr"><a href="#2、独占指针-unique-ptr" class="headerlink" title="2、独占指针 (unique_ptr)"></a>2、独占指针 (unique_ptr)</h2><h3 id="1、初始化-1"><a href="#1、初始化-1" class="headerlink" title="1、初始化"></a>1、初始化</h3><blockquote>
+<p>std::unique_ptr是一个独占型的智能指针，它不允许其他的智能指针共享其内部的指针，可以通过它的构造函数初始化一个独占智能指针对象，但是不允许通过赋值将一个unique_ptr赋值给另一个unique_ptr。不过我们可以通过move函数，将一个独占指针的值赋给另一个独占指针。</p>
+</blockquote>
+<p>独占指针的初始化必须采用直接初始化方式，不支持拷贝，也不支持赋值。</p>
+<p>正确的初始化：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">unique_ptr&lt;<span class="type">int</span>&gt; ptr;</span><br><span class="line"><span class="function">unique_ptr&lt;<span class="type">int</span>&gt; <span class="title">ptr1</span><span class="params">(<span class="keyword">new</span> <span class="type">int</span>(<span class="number">55</span>))</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>错误的初始化：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">unique_ptr&lt;<span class="type">int</span>&gt; <span class="title">ptr</span><span class="params">(ptr1)</span></span>; <span class="comment">//错误，不支持拷贝</span></span><br><span class="line">unique_ptr&lt;<span class="type">int</span>&gt; ptr = ptr1; <span class="comment">// 错误，不支持赋值。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2、删除器"><a href="#2、删除器" class="headerlink" title="2、删除器"></a>2、删除器</h3><p>问题：如何将一个unique_ptr赋值给另一个unique_ptr?</p>
+<p>A：可以利用std::move，其目的是实现所有权的转移。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// A 作为一个类 </span></span><br><span class="line"><span class="function">std::unique_ptr&lt;A&gt; <span class="title">ptr1</span><span class="params">(<span class="keyword">new</span> A())</span></span>;</span><br><span class="line">std::unique_ptr&lt;A&gt; ptr2 = std::<span class="built_in">move</span>(ptr1);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Test</span>() : <span class="built_in">m_num</span>(<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;construct Test...&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">Test</span>(<span class="type">int</span> x) : <span class="built_in">m_num</span>(<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;construct Test, x = &quot;</span> &lt;&lt; x &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">Test</span>(string str) : <span class="built_in">m_num</span>(<span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;construct Test, str = &quot;</span> &lt;&lt; str &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    ~<span class="built_in">Test</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;destruct Test...&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setValue</span><span class="params">(<span class="type">int</span> v)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;m_num = v;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;m_num: &quot;</span> &lt;&lt; <span class="keyword">this</span>-&gt;m_num &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> m_num;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/*--------------------------  一，初始化智能指针unique_ptr  ------------------------------*/</span></span><br><span class="line">    <span class="comment">//1.通过构造函数初始化</span></span><br><span class="line">    <span class="function">unique_ptr&lt;<span class="type">int</span>&gt; <span class="title">ptr1</span><span class="params">(<span class="keyword">new</span> <span class="type">int</span>(<span class="number">3</span>))</span></span>;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//2.通过移动函数初始化</span></span><br><span class="line">    unique_ptr&lt;<span class="type">int</span>&gt; ptr2 = <span class="built_in">move</span>(ptr1);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//.通过reset初始化</span></span><br><span class="line">    ptr2.<span class="built_in">reset</span>(<span class="keyword">new</span> <span class="built_in">int</span>(<span class="number">7</span>));</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/*--------------------------  二，unique_ptr的使用  ------------------------------*/</span></span><br><span class="line">    <span class="comment">//1.方法一</span></span><br><span class="line">    <span class="function">unique_ptr&lt;Test&gt; <span class="title">ptr3</span><span class="params">(<span class="keyword">new</span> Test(<span class="number">666</span>))</span></span>;</span><br><span class="line">    Test* pt = ptr3.<span class="built_in">get</span>();</span><br><span class="line">    pt-&gt;<span class="built_in">setValue</span>(<span class="number">6</span>);</span><br><span class="line">    pt-&gt;<span class="built_in">print</span>();</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//2.方法二</span></span><br><span class="line">    ptr3-&gt;<span class="built_in">setValue</span>(<span class="number">777</span>);</span><br><span class="line">    ptr3-&gt;<span class="built_in">print</span>();</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/*------------------------------------  三，指定删除器  -----------------------------------*/</span></span><br><span class="line">    <span class="comment">//1.函数指针类型</span></span><br><span class="line">    <span class="comment">//using ptrFunc = void(*)(Test*);</span></span><br><span class="line">    <span class="comment">//unique_ptr&lt;Test, ptrFunc&gt; ptr4(new Test(&quot;hello&quot;), [](Test* t) &#123;</span></span><br><span class="line">    <span class="comment">//    cout &lt;&lt; &quot;-----------------------&quot; &lt;&lt; endl;</span></span><br><span class="line">    <span class="comment">//    delete t;</span></span><br><span class="line">    <span class="comment">//    &#125;);</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">//2.仿函数类型（利用可调用对象包装器）</span></span><br><span class="line">    unique_ptr&lt;Test, function&lt;<span class="type">void</span>(Test*)&gt;&gt; <span class="built_in">ptr4</span>(<span class="keyword">new</span> <span class="built_in">Test</span>(<span class="string">&quot;hello&quot;</span>), [](Test* t) &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;-----------------------&quot;</span> &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">delete</span> t;</span><br><span class="line">        &#125;);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/*---------- 四，独占(共享)的智能指针可以管理数组类型的地址，能够自动释放 ---------*/</span></span><br><span class="line">    <span class="function">unique_ptr&lt;Test[]&gt; <span class="title">ptr5</span><span class="params">(<span class="keyword">new</span> Test[<span class="number">3</span>])</span></span>;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//在c++11中shared_ptr不支持下面的写法，c++11以后才支持的</span></span><br><span class="line">    <span class="function">shared_ptr&lt;Test[]&gt; <span class="title">ptr6</span><span class="params">(<span class="keyword">new</span> Test[<span class="number">3</span>])</span></span>;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、弱指针-weak-ptr"><a href="#3、弱指针-weak-ptr" class="headerlink" title="3、弱指针 (weak_ptr)"></a>3、弱指针 (weak_ptr)</h2><p>弱引用智能指针std::weak_ptr可以看做是shared_ptr的助手，它不管理shared_ptr内部的指针。std::weak_ptr没有重载操作符*和-&gt;，因为它不共享指针，不能操作资源，所以它的构造不会增加引用计数，析构也不会减少引用计数，它的主要作用就是作为一个旁观者监视shared_ptr中管理的资源是否存在。</p>
+<h3 id="1、初始化-2"><a href="#1、初始化-2" class="headerlink" title="1、初始化"></a>1、初始化</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">shared_ptr&lt;<span class="type">int</span>&gt; <span class="title">sp</span><span class="params">(<span class="keyword">new</span> <span class="type">int</span>)</span></span>;</span><br><span class="line"> </span><br><span class="line">    weak_ptr&lt;<span class="type">int</span>&gt; wp1;</span><br><span class="line">    <span class="function">weak_ptr&lt;<span class="type">int</span>&gt; <span class="title">wp2</span><span class="params">(wp1)</span></span>;</span><br><span class="line">    <span class="function">weak_ptr&lt;<span class="type">int</span>&gt; <span class="title">wp3</span><span class="params">(sp)</span></span>;</span><br><span class="line">    weak_ptr&lt;<span class="type">int</span>&gt; wp4;</span><br><span class="line">    wp4 = sp;</span><br><span class="line">    weak_ptr&lt;<span class="type">int</span>&gt; wp5;</span><br><span class="line">    wp5 = wp3;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>weak_ptr&lt;int&gt; wp1;构造了一个空weak_ptr对象</p>
+<p>weak_ptr&lt;int&gt; wp2(wp1);通过一个空weak_ptr对象构造了另一个空weak_ptr对象</p>
+<p>weak_ptr&lt;int&gt; wp3(sp);通过一个shared_ptr对象构造了一个可用的weak_ptr实例对象</p>
+<p>wp4 &#x3D; sp;通过一个shared_ptr对象构造了一个可用的weak_ptr实例对象（这是一个隐式类型转换）</p>
+<p>wp5 &#x3D; wp3;通过一个weak_ptr对象构造了一个可用的weak_ptr实例对象</p>
+<p>通过调用std::weak_ptr类提供的use_count()方法可以获得当前所观测资源的引用计数</p>
+<h3 id="2、常用函数"><a href="#2、常用函数" class="headerlink" title="2、常用函数"></a>2、常用函数</h3><p>通过调用std::weak_ptr类提供的expired()方法来判断观测的资源是否已经被释放</p>
+<p>通过调用std::weak_ptr类提供的lock()方法来获取管理所监测资源的shared_ptr对象</p>
+<p>通过调用std::weak_ptr类提供的reset()方法来清空对象，使其不监测任何资源</p>
+<ul>
+<li>利用**<code>weak_ptr可以解决shared_ptr的一些问题</code>**</li>
+</ul>
+<ol>
+<li>返回管理this的shared_ptr</li>
+</ol>
+<p>&amp;#x20;2.  解决循环引用问题</p>
+<h2 id="4、使用是智能指针会出现什么问题？"><a href="#4、使用是智能指针会出现什么问题？" class="headerlink" title="4、使用是智能指针会出现什么问题？"></a>4、使用是智能指针会出现什么问题？</h2><p>循环引用；</p>
+<p>两个类内的循环指针互相指向，没有指向环中的外部共享指针，<code>shared_ptr</code> 引用计数无法抵达 0，该调用析构函数但是没能调用，导致了内存泄漏。</p>
+<p>使用弱指针，可以避免这个问题：</p>
+<ul>
+<li><p><code>weak_ptr</code>对被<code>shared_ptr</code>管理的对象存在<strong>非拥有性引用</strong>，在访问所引用的对象前必须先转化为<code>shared_ptr</code>；</p>
+</li>
+<li><p><code>weak_ptr</code>用来打断<code>shared_ptr</code>所管理对象的循环引用问题，若这种环被孤立（没有指向环中的外部共享指针），<code>shared_ptr</code>引用计数无法抵达0，内存被泄露；令环中的指针之一为弱指针可以避免该情况。</p>
+</li>
+<li><p><code>weak_ptr</code>用来表示临时所有权的概念。当某个对象只有存在时才需要被访问，而且随时可能被他人删除，可以用<code>weak_ptr</code>跟踪该对象；需要获得所有权时将其转化为<code>shared_ptr</code>，此时如果原来的<code>shared_ptr</code>被销毁，则该对象的生命周期被延长到这个临时的<code>shared_ptr</code>同样被销毁。</p>
+</li>
+</ul>
+<p>未使用弱指针：</p>
+<p>起初定义完<code>ptr_a</code>和<code>ptr_b</code>时，只有1，3两条引用，即<code>ptr_a</code>指向CA对象，<code>ptr_b</code>指向CB对象。然后调用函数<code>set_ptr()</code>后又增加了2，4两条引用，即CB对象中的<code>m_ptr_a</code>成员变量指向CA对象，CA对象中的<code>m_ptr_b</code>成员变量指向CB对象。</p>
+<p>这个时候，指向CA对象的有两个，指向CB对象的也有两个。当main函数运行结束时，对象<code>ptr_a</code>和<code>ptr_b</code>被销毁，也就是1，3两条引用会被断开，2，4两条引用依然存在，每一个的引用计数都不为0，结果就导致其指向的内部对象无法析构，造成内存泄漏。</p>
+<p>2，4之间的引用，m_ptr_a指向CA，CA不为空，m_ptr_a有效，不能被释放掉。同时由于m_ptr_a的存在，CB不为空，m_ptr_b不能被释放掉。这就导致了这两个相互引用的次数一直为1，不能被释放，计数机制失效了，造成了内存泄漏。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209132044091.png"></p>
+<p>使用弱指针：</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209132044244.png"></p>
+<p>流程与上一例子大体相似，但是不同的是4这条引用是通过<code>weak_ptr</code>建立的，并不会增加引用计数。也就是说，CA的对象只有一个引用计数，而CB的对象只有两个引用计数，当main函数返回时，对象<code>ptr_a</code>和<code>ptr_b</code>被销毁，也就是1，3两条引用会被断开，此时CA对象的引用计数会减为0，对象被销毁，进而解决了引用成环的问题。</p>
+<h2 id="5、使用new和delete管理动态内存的缺点（坚持使用智能指针）"><a href="#5、使用new和delete管理动态内存的缺点（坚持使用智能指针）" class="headerlink" title="5、使用new和delete管理动态内存的缺点（坚持使用智能指针）"></a>5、使用new和delete管理动态内存的缺点（坚持使用智能指针）</h2><p>使用new和delete管理动态内存容易存在问题：</p>
+<p>1、忘记用delete 释放内存</p>
+<p>2、同一块内存由于拷贝，可能被释放了两次</p>
+<p>3、可能会使用释放后的对象</p>
+<p>因此，坚持使用智能指针，可以避免所有这些问题，对于一块内存，只有在没有任何指针指向的时候，才会释放他。</p>
+]]></content>
+      <categories>
+        <category>c++突击</category>
       </categories>
       <tags>
         <tag>c++</tag>
@@ -180,6 +308,65 @@
 ]]></content>
       <categories>
         <category>C++突击</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>四星 C++ 内存泄漏</title>
+    <url>/2022/09/13/%E5%9B%9B%E6%98%9F%20%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%20%20%20%20-%20%20%20%202022-09-01/</url>
+    <content><![CDATA[<p><strong>内存泄漏：由于疏忽或错误导致的程序未能释放已经不再使用的内存。</strong><br>进一步解释：</p>
+<ul>
+<li><p>并非指内存从物理上消失，而是指程序在运行过程中，由于疏忽或错误而失去了对该内存的控制，从而造成了内存的浪费。</p>
+</li>
+<li><p><strong>常指堆内存泄漏，因为堆是动态分配的，而且是用户来控制的，如果使用不当，会产生内存泄漏。</strong></p>
+</li>
+<li><p>使用 malloc、calloc、realloc、new 等分配内存时，使用完后要调用相应的 free 或 delete 释放内存，否则这块内存就会造成内存泄漏。</p>
+</li>
+<li><p>指针重新赋值</p>
+<span id="more"></span></li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span> *p = (<span class="type">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>);</span><br><span class="line"><span class="type">char</span> *p1 = (<span class="type">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>);</span><br><span class="line">p = np;</span><br></pre></td></tr></table></figure>
+
+<p>开始时，指针 p 和 p1 分别指向一块内存空间，但指针 p 被重新赋值，导致 p 初始时指向的那块内存空间无法找到，从而发生了内存泄漏。</p>
+<p>忘记了释放内存，造成内存泄露的后果</p>
+<blockquote>
+<p>含有这种错误的函数每被调用一次就丢失一块内存。刚开始时系统的内存充足，你看不到错误。终有一次程序突然死掉，系统出现提示：内存耗尽。</p>
+</blockquote>
+<p><strong>再提一嘴内存溢出</strong></p>
+<p>概念：内存溢出out of memory，是指程序在申请内存时，没有足够的内存空间供其使用，出现out of memory；比如申请一个int，但是给其存了long才能存得下的数，那就是内存溢出</p>
+<blockquote>
+<p>发生原因</p>
+<ul>
+<li><p>内存中加载的数据量过于庞大；</p>
+</li>
+<li><p>代码中存在<strong>死循环</strong>；</p>
+</li>
+<li><p>递归调用<strong>太深，导致栈溢出</strong>；</p>
+</li>
+<li><p><strong>内存泄漏</strong>最终导致内存溢出。</p>
+</li>
+</ul>
+</blockquote>
+<p><strong>再来一嘴野指针</strong></p>
+<p>指向已经删除的对象或者申请访问受限内存区域的指针，称为野指针。</p>
+<p>野指针与空指针不同，空指针是null。但是野指针并不知道指向了哪里，只能通过编程习惯规避。</p>
+<blockquote>
+<p>可能发生的原因：</p>
+<ul>
+<li><p>指针没有初始化：指针变量在被创建未初始化时，并不是空指针，它的缺省值是随机的，会乱指一气。所以指针变量在创建同时就应对其进行初始化，要么将指针设置为NULL，要么让其指向一个合法的内存。</p>
+</li>
+<li><p>指针释放之后未置空：有时指针在free或者delete之后未赋值NULL，有可能被误以为是合法的指针，不能进关注free和delete后的指针名，他们只是将指针所指向的内存空间释放掉而已，但并没有把指针自身消灭，此时，指针指向的就是“垃圾”内存。被释放掉内存空间的指针应该立即将其置为NULL，防止产生野指针。</p>
+</li>
+<li><p>指针操作超越变量作用域</p>
+</li>
+</ul>
+<p>我觉得重点还是关注 没有初始化，以及本来指向了一块内存，然后指向的变量生命周期结束了，这个指针没有指向了，要及时置空。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>c++突击</category>
       </categories>
       <tags>
         <tag>c++</tag>
@@ -300,6 +487,66 @@
       </categories>
       <tags>
         <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>视觉SLAM十四讲-第二讲：初识SLAM</title>
+    <url>/2022/08/26/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E4%B9%8B%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
+    <content><![CDATA[<p>本文主要介绍视觉SLAM十四讲中第二讲的关键内容。</p>
+<span id="more"></span>
+<h2 id="第二讲：初识SLAM"><a href="#第二讲：初识SLAM" class="headerlink" title="第二讲：初识SLAM"></a>第二讲：初识SLAM</h2><p>一类传感器是<strong>携带于机器人本体上</strong>的，例如机器人的轮式编码器、相机、激光等等 ——通过间接测量数据推算位置，好处是对环境没有提出要求，适用于位置环境。</p>
+<p>一类是<strong>安装于环境中</strong>的，例如前面讲的导轨、二维码标志等等。   —— 约束了外界环境，限制了使用范围</p>
+<blockquote>
+<p>📌</p>
+<p><strong>单目相机</strong>是三维空间的二维投影，因此，如果想恢复三维结构，必须移动相机的视角。</p>
+<p>因此，<strong>单目相机平移之后才能计算深度，并且无法确定真实尺度</strong>，问题的本质在于通过单张图像无法确定深度。</p>
+</blockquote>
+<blockquote>
+<p>📌<strong>双目相机</strong>和<strong>深度相机</strong>，目的在于通过某种手段测量物体距离我们的距离，回复距离信息，因此场景的三维结构可以通过单张图线回复，也就消除了尺度不确定性。</p>
+<p>双目相机测量到的深度范围与基线相关。基线距离越大，能够测量到的就越远</p>
+<p><strong>双目或多目相机的缺点</strong>是配置与标定均较为复杂，其深度量程和精度受双目的基线与分辨率限制，而且视差的计算非常消耗计算资源</p>
+<p><strong>深度相机</strong>（又称 RGB-D 相机)右开始兴起的一种相机，它最大的特点是可以通过红外结构光或 Time-of-Flight（ToF）原理，像激光传感器那样，通过主动向物体发射光并接收返回的光，测出物体离相机的距离。<strong>区别于双目相机是采用计算的方式获得深度，深度相机是通过物理方式，避免了大量的计算。</strong></p>
+</blockquote>
+<p>视觉里程计只计算相邻时刻的运动，而和再往前的过去的信息没有关联。仅通过视觉里程计估计轨迹，将不可避免的出现累积漂移。每次估计都会有一定的误差，由于里程计只估计相邻时刻的运动，先前时刻的误差将会传递到下一时刻，导致一段时间后估计的轨迹不再准确。</p>
+<p>后端优化主要指处理 SLAM 过程中噪声的问题。后端优化要考虑的问题，就是如何从这些带有噪声的数据中，估计整个系统的状态，以及这个状态估计的不确定性有多大——这称为最大后验概率估（Maximum-a-Posteriori，MAP）。</p>
+<p>为了实现回环检测，我们需要让机器人具有识别曾到达过的场景的能力。</p>
+<blockquote>
+<p>📌<strong>SLAM问题的数学表述</strong></p>
+<p><img data-src="https://s2.loli.net/2022/08/26/HR8BbFdckGSAUpP.png" alt="SLAM运动和观测方程.png"></p>
+<p>方程1是运动方程，方程2是观测方程</p>
+<p>其中uk代表传感器输入，z代表传感器观测，y代表路标。</p>
+<p>运动方程:  相机是六自由度姿态，两次位姿之间的关系相差一个旋转矩阵。</p>
+<p>观测方程：z是在xk位置观测到yj所产生的观测数据。例如，在xk看到一个特征点，获得他的像素坐标[u,v]，由三维空间点获得像素坐标，这是<strong>相机模型。</strong></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>视觉SLAM</category>
+      </categories>
+      <tags>
+        <tag>SLAM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决typora提示:This beta version of Typora is expired</title>
+    <url>/2022/08/27/%E8%A7%A3%E5%86%B3typora%E6%8F%90%E7%A4%BAThis%20beta%20version%20of%20Typora%20is%20expired/</url>
+    <content><![CDATA[<p>解决typora提示This beta version of Typora is expired, please download and install a newer version<br>自从typora付费之后也没有怎么使用，后来做git仓库+picgo+typora联动的时候，再次打开typora，弹出了以下窗口：</p>
+<span id="more"></span>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271020322.png" alt="ERROR提示"></p>
+<p>我重新下载了付费版本的typora然后然后开启了15天尝鲜。但是我发现之后再想用typora打开md文档的时候依然会出现这个提示框，并且无论是点击确定还是×掉都依然会跳转到typora的安装界面。</p>
+<p>这个错误提示大概的意思就是beta版本的typora已经过，需要下载最新版本。</p>
+<p>在网上查找了一圈解决办法，目前通过修改注册表解决了我的问题。</p>
+<p>以下是解决步骤：</p>
+<p>1、win+r 打开运行窗口 &amp;#x20;<br>2、在搜索栏输入regedit，回车后打开注册表 &amp;#x20;<br>3、在注册表中找到：计算机\HKEY_CURRENT_USER\Software\Typora &amp;#x20;<br>4、鼠标右键Typora，选择权限 &amp;#x20;<br>5、选择Administraors，将下面的权限选择为拒绝</p>
+<p>点击应用的时候可能会出现提醒，点确定就行了。最后保存设置。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271021324.png" alt="修改typora权限"></p>
+<p>6、重新打开typora，就可以正常应用了。</p>
+<p>以上就是问题的解决方法。</p>
+]]></content>
+      <categories>
+        <category>一些奇奇怪怪的问题之windows</category>
+      </categories>
+      <tags>
+        <tag>typora</tag>
       </tags>
   </entry>
   <entry>
@@ -464,66 +711,6 @@
 <li><p>&amp;#x20;一般线程方程 Ax &#x3D; b 有哪几种做法？你能在 Eigen 中实现吗？</p>
 </li>
 </ol>
-</blockquote>
-]]></content>
-      <categories>
-        <category>视觉SLAM</category>
-      </categories>
-      <tags>
-        <tag>SLAM</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>解决typora提示:This beta version of Typora is expired</title>
-    <url>/2022/08/27/%E8%A7%A3%E5%86%B3typora%E6%8F%90%E7%A4%BAThis%20beta%20version%20of%20Typora%20is%20expired/</url>
-    <content><![CDATA[<p>解决typora提示This beta version of Typora is expired, please download and install a newer version<br>自从typora付费之后也没有怎么使用，后来做git仓库+picgo+typora联动的时候，再次打开typora，弹出了以下窗口：</p>
-<span id="more"></span>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271020322.png" alt="ERROR提示"></p>
-<p>我重新下载了付费版本的typora然后然后开启了15天尝鲜。但是我发现之后再想用typora打开md文档的时候依然会出现这个提示框，并且无论是点击确定还是×掉都依然会跳转到typora的安装界面。</p>
-<p>这个错误提示大概的意思就是beta版本的typora已经过，需要下载最新版本。</p>
-<p>在网上查找了一圈解决办法，目前通过修改注册表解决了我的问题。</p>
-<p>以下是解决步骤：</p>
-<p>1、win+r 打开运行窗口 &amp;#x20;<br>2、在搜索栏输入regedit，回车后打开注册表 &amp;#x20;<br>3、在注册表中找到：计算机\HKEY_CURRENT_USER\Software\Typora &amp;#x20;<br>4、鼠标右键Typora，选择权限 &amp;#x20;<br>5、选择Administraors，将下面的权限选择为拒绝</p>
-<p>点击应用的时候可能会出现提醒，点确定就行了。最后保存设置。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271021324.png" alt="修改typora权限"></p>
-<p>6、重新打开typora，就可以正常应用了。</p>
-<p>以上就是问题的解决方法。</p>
-]]></content>
-      <categories>
-        <category>一些奇奇怪怪的问题之windows</category>
-      </categories>
-      <tags>
-        <tag>typora</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>视觉SLAM十四讲-第二讲：初识SLAM</title>
-    <url>/2022/08/26/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E4%B9%8B%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
-    <content><![CDATA[<p>本文主要介绍视觉SLAM十四讲中第二讲的关键内容。</p>
-<span id="more"></span>
-<h2 id="第二讲：初识SLAM"><a href="#第二讲：初识SLAM" class="headerlink" title="第二讲：初识SLAM"></a>第二讲：初识SLAM</h2><p>一类传感器是<strong>携带于机器人本体上</strong>的，例如机器人的轮式编码器、相机、激光等等 ——通过间接测量数据推算位置，好处是对环境没有提出要求，适用于位置环境。</p>
-<p>一类是<strong>安装于环境中</strong>的，例如前面讲的导轨、二维码标志等等。   —— 约束了外界环境，限制了使用范围</p>
-<blockquote>
-<p>📌</p>
-<p><strong>单目相机</strong>是三维空间的二维投影，因此，如果想恢复三维结构，必须移动相机的视角。</p>
-<p>因此，<strong>单目相机平移之后才能计算深度，并且无法确定真实尺度</strong>，问题的本质在于通过单张图像无法确定深度。</p>
-</blockquote>
-<blockquote>
-<p>📌<strong>双目相机</strong>和<strong>深度相机</strong>，目的在于通过某种手段测量物体距离我们的距离，回复距离信息，因此场景的三维结构可以通过单张图线回复，也就消除了尺度不确定性。</p>
-<p>双目相机测量到的深度范围与基线相关。基线距离越大，能够测量到的就越远</p>
-<p><strong>双目或多目相机的缺点</strong>是配置与标定均较为复杂，其深度量程和精度受双目的基线与分辨率限制，而且视差的计算非常消耗计算资源</p>
-<p><strong>深度相机</strong>（又称 RGB-D 相机)右开始兴起的一种相机，它最大的特点是可以通过红外结构光或 Time-of-Flight（ToF）原理，像激光传感器那样，通过主动向物体发射光并接收返回的光，测出物体离相机的距离。<strong>区别于双目相机是采用计算的方式获得深度，深度相机是通过物理方式，避免了大量的计算。</strong></p>
-</blockquote>
-<p>视觉里程计只计算相邻时刻的运动，而和再往前的过去的信息没有关联。仅通过视觉里程计估计轨迹，将不可避免的出现累积漂移。每次估计都会有一定的误差，由于里程计只估计相邻时刻的运动，先前时刻的误差将会传递到下一时刻，导致一段时间后估计的轨迹不再准确。</p>
-<p>后端优化主要指处理 SLAM 过程中噪声的问题。后端优化要考虑的问题，就是如何从这些带有噪声的数据中，估计整个系统的状态，以及这个状态估计的不确定性有多大——这称为最大后验概率估（Maximum-a-Posteriori，MAP）。</p>
-<p>为了实现回环检测，我们需要让机器人具有识别曾到达过的场景的能力。</p>
-<blockquote>
-<p>📌<strong>SLAM问题的数学表述</strong></p>
-<p><img data-src="https://s2.loli.net/2022/08/26/HR8BbFdckGSAUpP.png" alt="SLAM运动和观测方程.png"></p>
-<p>方程1是运动方程，方程2是观测方程</p>
-<p>其中uk代表传感器输入，z代表传感器观测，y代表路标。</p>
-<p>运动方程:  相机是六自由度姿态，两次位姿之间的关系相差一个旋转矩阵。</p>
-<p>观测方程：z是在xk位置观测到yj所产生的观测数据。例如，在xk看到一个特征点，获得他的像素坐标[u,v]，由三维空间点获得像素坐标，这是<strong>相机模型。</strong></p>
 </blockquote>
 ]]></content>
       <categories>
