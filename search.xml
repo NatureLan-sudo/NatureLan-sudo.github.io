@@ -86,6 +86,27 @@
       </tags>
   </entry>
   <entry>
+    <title>三星 C++ 怎么防止内存泄漏</title>
+    <url>/2022/09/13/%E4%B8%89%E6%98%9F%20%E6%80%8E%E4%B9%88%E9%98%B2%E6%AD%A2%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%EF%BC%9F%20%20%20%20-%20%20%20%202022-09-05/</url>
+    <content><![CDATA[<p>内存泄漏将会导致系统内存中无用的空间越来越多，最终导致内存不足，内存爆炸。所以，有必要防止内存泄漏。本文介绍了两种防止内存泄漏的方法以及内存泄漏检测工具valgrind的实现原理。</p>
+<span id="more"></span>
+<h2 id="1、防止内存泄漏"><a href="#1、防止内存泄漏" class="headerlink" title="1、防止内存泄漏"></a>1、防止内存泄漏</h2><h3 id="1、内部封装"><a href="#1、内部封装" class="headerlink" title="1、内部封装"></a>1、内部封装</h3><p>将内存的分配和释放封装到类中。在类中构造构造函数和析构函数。构造的时候分配内存空间，最后从析构函数中释放内存空间。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="type">char</span> p*;</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> p_size;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">A</span>(<span class="type">unsigned</span> <span class="type">int</span> n = <span class="number">1</span>) &#123;</span><br><span class="line">    p = <span class="keyword">new</span> <span class="type">char</span>[n]; <span class="comment">// 构造函数分配内存</span></span><br><span class="line">    p_size = n;</span><br><span class="line">  &#125;</span><br><span class="line">  ~<span class="built_in">A</span>() &#123;</span><br><span class="line">    <span class="keyword">if</span> (p != <span class="literal">NULL</span>) &#123;</span><br><span class="line">     <span class="keyword">delete</span>[] p; <span class="comment">// 删除字符数组的内存空间，在堆上</span></span><br><span class="line">     p = <span class="literal">NULL</span>;  <span class="comment">// p指向的空间已经被删除了，给p重新赋值，避免出现野指针。</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>该方法不是最佳的做法，因为在类的对象复制时，程序会出现同一块内存空间释放两次的情况。</p>
+<p>在一个函数内创建两个类的对象，让一个对象等于另一个对象。在离开函数作用域的时候，将会调用两次析构函数来释放空间，但是两个对象指向同一块内存，所以同一块内存就被释放了两次。** 可以通过增加计数机制来避免这种情况**；</p>
+<h3 id="2、智能指针"><a href="#2、智能指针" class="headerlink" title="2、智能指针"></a>2、智能指针</h3><p>智能指针是 C++ 中已经对内存泄漏封装好了一个工具，可以直接拿来使用。可以自己计数。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209132043830.png"></p>
+<p><img data-src="/image/image_VK2HHXZfof.png"></p>
+]]></content>
+      <categories>
+        <category>c++突击</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>19.删除链表的倒数第N个元素</title>
     <url>/2022/09/04/19.%20%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%ACN%E4%B8%AA%E5%85%83%E7%B4%A0%20%20%20%20-%20%20%20%202022-09-04/</url>
     <content><![CDATA[<p>给你一个链表，删除链表的倒数第N个结点并返回链链表的头结点。利用双指针中的快慢指针解决问题。</p>
@@ -114,96 +135,6 @@
       <tags>
         <tag>c++</tag>
         <tag>LeetCode</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>三星 C++ 怎么防止内存泄漏</title>
-    <url>/2022/09/13/%E4%B8%89%E6%98%9F%20%E6%80%8E%E4%B9%88%E9%98%B2%E6%AD%A2%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%EF%BC%9F%20%20%20%20-%20%20%20%202022-09-05/</url>
-    <content><![CDATA[<p>内存泄漏将会导致系统内存中无用的空间越来越多，最终导致内存不足，内存爆炸。所以，有必要防止内存泄漏。本文介绍了两种防止内存泄漏的方法以及内存泄漏检测工具valgrind的实现原理。</p>
-<span id="more"></span>
-<h2 id="1、防止内存泄漏"><a href="#1、防止内存泄漏" class="headerlink" title="1、防止内存泄漏"></a>1、防止内存泄漏</h2><h3 id="1、内部封装"><a href="#1、内部封装" class="headerlink" title="1、内部封装"></a>1、内部封装</h3><p>将内存的分配和释放封装到类中。在类中构造构造函数和析构函数。构造的时候分配内存空间，最后从析构函数中释放内存空间。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="type">char</span> p*;</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> p_size;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">A</span>(<span class="type">unsigned</span> <span class="type">int</span> n = <span class="number">1</span>) &#123;</span><br><span class="line">    p = <span class="keyword">new</span> <span class="type">char</span>[n]; <span class="comment">// 构造函数分配内存</span></span><br><span class="line">    p_size = n;</span><br><span class="line">  &#125;</span><br><span class="line">  ~<span class="built_in">A</span>() &#123;</span><br><span class="line">    <span class="keyword">if</span> (p != <span class="literal">NULL</span>) &#123;</span><br><span class="line">     <span class="keyword">delete</span>[] p; <span class="comment">// 删除字符数组的内存空间，在堆上</span></span><br><span class="line">     p = <span class="literal">NULL</span>;  <span class="comment">// p指向的空间已经被删除了，给p重新赋值，避免出现野指针。</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>该方法不是最佳的做法，因为在类的对象复制时，程序会出现同一块内存空间释放两次的情况。</p>
-<p>在一个函数内创建两个类的对象，让一个对象等于另一个对象。在离开函数作用域的时候，将会调用两次析构函数来释放空间，但是两个对象指向同一块内存，所以同一块内存就被释放了两次。** 可以通过增加计数机制来避免这种情况**；</p>
-<h3 id="2、智能指针"><a href="#2、智能指针" class="headerlink" title="2、智能指针"></a>2、智能指针</h3><p>智能指针是 C++ 中已经对内存泄漏封装好了一个工具，可以直接拿来使用。可以自己计数。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209132043830.png"></p>
-<p><img data-src="/image/image_VK2HHXZfof.png"></p>
-]]></content>
-      <categories>
-        <category>c++突击</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>五星 C++ 堆和栈的区别</title>
-    <url>/2022/09/02/%E4%BA%94%E6%98%9F%20C++%E6%A0%88%E5%92%8C%E5%A0%86%E7%9A%84%E5%8C%BA%E5%88%AB%20%20%20-%20%20%20%202022-08-29/</url>
-    <content><![CDATA[<p><strong>申请方式：</strong> 栈是系统自动分配，堆是程序员主动申请。<strong>申请后系统响应：</strong>分配栈空间，如果剩余空间大于申请空间则分配成功，否则分配失败栈溢出；申请堆空间，堆在内存中呈现的方式类似于链表（记录空闲地址空间的链表），在链表上寻找第一个大于申请空间的节点分配给程序，将该节点从链表中删除，大多数系统中该块空间的首地址存放的是本次分配空间的大小，便于释放，将该块空间上的剩余空间再次连接在空闲链表上。<br>栈在内存中是连续的一块空间（向低地址扩展）<strong>最大容量是系统预定好的</strong>，堆在内存中的空间（向高地址扩展）是<strong>不连续</strong>的。<br><strong>申请效率：</strong> 栈是有系统自动分配，申请效率高，但程序员无法控制；堆是由程序员主动申请，效率低，使用起来方便但是容易产生碎片。<br><strong>存放的内容：</strong> 栈中存放的是局部变量，函数的参数；堆中存放的内容由程序员控制。</p>
-<span id="more"></span>
-
-<p><strong>问题1：堆的内存为什么是不连续的</strong></p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418598.png"></p>
-<p><strong>问题2：堆和栈的不同点</strong></p>
-<p>管理方式：堆-程序员。栈-系统。</p>
-<p>空间大小：堆-不确定。栈-最大容量是系统设定好的。</p>
-<p>生长方向：堆-向高地址扩展，不连续。栈-向低地址扩展，连续。</p>
-<p>分配效率：堆-程序员申请，效率低，容易产生碎片。栈-系统分配，效率高，但是程序员不能控制。</p>
-<p>存放内容：堆-程序员自己申请的内容。栈-局部变量，函数参数等。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418580.png"></p>
-]]></content>
-      <categories>
-        <category>C++突击</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>五星 C++ 内存管理</title>
-    <url>/2022/09/01/%E4%BA%94%E6%98%9FC++%20%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%20-2022-08-29/</url>
-    <content><![CDATA[<p>C++ 内存分区：<strong>栈、堆、全局&#x2F;静态存储区、常量存储区、代码区</strong>。</p>
-<span id="more"></span>
-
-<p><strong>栈</strong>：存放函数的局部变量、函数参数、返回地址等，<strong>由编译器自动分配和释放</strong>。</p>
-<blockquote>
-<p>栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈互相独立。每个函数都有自己的栈，栈被用来在函数之间传递参数。操作系统在切换线程的时候会自动的切换栈，就是切换SS&#x2F;ESP寄存器。栈空间不需要在高级语言里面显式的分配和释放。</p>
-</blockquote>
-<p><strong>堆</strong>：动态申请的内存空间，就是由 **malloc **分配的内存块，<strong>由程序员控制它的分配和释放</strong>，如果程序执行结束还没有释放，操作系统会自动回收。（是可能会会释放，所以说，用完了一定记得要释放，不然会造成内存泄露）。</p>
-<blockquote>
-<p>堆一般由程序员分配释放，若不释放，程序结束时可能由OS回收。注意这里说是可能，并非一定。所以我想再强调一次，记得要释放！注意它与数据结构中的堆是两回事，分配方式倒是类似于链表。</p>
-<p>当内存不再使用的时候，应使用free()函数将内存块释放掉。</p>
-</blockquote>
-<p><strong>全局区&#x2F;静态存储区（.bss 段和 .data 段）</strong>：存放全局变量和静态变量，程序运行结束操作系统自动释放，在 C 语言中，未初始化的放在 .bss 段中，初始化的放在 .data 段中，C++ 中不再区分了。</p>
-<blockquote>
-<p>解释一下静态变量</p>
-<p>静态变量通过关键字static进行声明。</p>
-<p>经static修饰过后的变量或者函数的作用域会发生变化。该变量存储在数据段上，可以改变变量的作用域和生命周期。</p>
-<p><strong>全局静态变量</strong></p>
-<p>在全局变量前面加上关键词static，全局变量就被定义成一个全局静态变量</p>
-<p>（1）内存中的位置：静态存储区（静态存储区在整个程序运行期间都存在）</p>
-<p>（2）初始化：未经初始化的全局静态变量会被程序自动初始化为0</p>
-<p>（3）作用域：全局静态变量在声明他的文件之外是不可见的。准确地讲从定义之处开始到文件结尾。</p>
-<p><strong>局部静态变量</strong></p>
-<p>在局部变量前面加上关键词static，局部变量就被定义成一个局部静态变量。</p>
-<p>（1）内存中的位置：静态存储区</p>
-<p>（2）初始化：未经初始化的局部静态变量会被程序自动初始化为0（自动对象的值是任意的，除非他被显示初始化）</p>
-<p>（3）作用域：作用域仍为局部作用域，当定义它的函数或者语句块结束的时候，作用域随之结束。</p>
-<p><strong>C语言中使用静态函数的好处</strong></p>
-<p>（1）静态函数会被自动分配在一个一直使用的存储区，直到退出程序，<strong>避免了调用函数的压栈出栈</strong>，速度快很多。</p>
-<p>（2）static指函数的作用域仅局限于本文件。不<strong>用担心自己定义的函数是否会与其他文件的函数同名</strong></p>
-</blockquote>
-<p><strong>常量存储区（.data 段）</strong>：存放的是<strong>常量，不允许修改</strong>，程序运行结束自动释放。<br><strong>代码区（.text 段）</strong>：<strong>存放代码，不允许修改</strong>，但可以执行。编译后的二进制文件存放在这里。<br>说明：</p>
-<p>从操作系统的本身来讲，以上存储区在内存中的分布是如下形式(从低地址到高地址)：</p>
-<p><strong>.text 段 –&gt; .data 段 –&gt; .bss 段 –&gt; 堆 –&gt; unused –&gt; 栈 –&gt; env</strong></p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">说明：C++ 中不再区分初始化和未初始化的全局变量、静态变量的存储区，如果非要区分下述程序标注在了括号中</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> g_var = <span class="number">0</span>; <span class="comment">// g_var 在全局区（.data 段）</span></span><br><span class="line"><span class="type">char</span> *gp_var;  <span class="comment">// gp_var 在全局区（.bss 段）</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> var;                    <span class="comment">// var 在栈区</span></span><br><span class="line">    <span class="type">char</span> *p_var;                <span class="comment">// p_var 在栈区</span></span><br><span class="line">    <span class="type">char</span> arr[] = <span class="string">&quot;abc&quot;</span>;         <span class="comment">// arr 为数组变量，存储在栈区；&quot;abc&quot;为字符串常量，存储在常量区</span></span><br><span class="line">    <span class="type">char</span> *p_var1 = <span class="string">&quot;123456&quot;</span>;    <span class="comment">// p_var1 在栈区；&quot;123456&quot;为字符串常量，存储在常量区</span></span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> s_var = <span class="number">0</span>;       <span class="comment">// s_var 为静态变量，存在静态存储区（.data 段）</span></span><br><span class="line">    p_var = (<span class="type">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>); <span class="comment">// 分配得来的 10 个字节的区域在堆区</span></span><br><span class="line">    <span class="built_in">free</span>(p_var);                <span class="comment">// 因为使用了malloc堆的空间，由程序员自己释放掉</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：力扣 (LeetCode)</span><br><span class="line">链接：https:<span class="comment">//leetcode.cn/leetbook/read/cpp-interview-highlights/e4vkxv/</span></span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>C++突击</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
       </tags>
   </entry>
   <entry>
@@ -314,27 +245,20 @@
       </tags>
   </entry>
   <entry>
-    <title>四星 C++ 程序编译过程</title>
-    <url>/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/</url>
-    <content><![CDATA[<p>编译过程可以分为以下三个过程：编译（编译预处理、编译、优化），汇编，链接。<br>其中编译又可以分为编译预处理以及编译优化，就可以划分为四部分。</p>
+    <title>五星 C++ 堆和栈的区别</title>
+    <url>/2022/09/02/%E4%BA%94%E6%98%9F%20C++%E6%A0%88%E5%92%8C%E5%A0%86%E7%9A%84%E5%8C%BA%E5%88%AB%20%20%20-%20%20%20%202022-08-29/</url>
+    <content><![CDATA[<p><strong>申请方式：</strong> 栈是系统自动分配，堆是程序员主动申请。<strong>申请后系统响应：</strong>分配栈空间，如果剩余空间大于申请空间则分配成功，否则分配失败栈溢出；申请堆空间，堆在内存中呈现的方式类似于链表（记录空闲地址空间的链表），在链表上寻找第一个大于申请空间的节点分配给程序，将该节点从链表中删除，大多数系统中该块空间的首地址存放的是本次分配空间的大小，便于释放，将该块空间上的剩余空间再次连接在空闲链表上。<br>栈在内存中是连续的一块空间（向低地址扩展）<strong>最大容量是系统预定好的</strong>，堆在内存中的空间（向高地址扩展）是<strong>不连续</strong>的。<br><strong>申请效率：</strong> 栈是有系统自动分配，申请效率高，但程序员无法控制；堆是由程序员主动申请，效率低，使用起来方便但是容易产生碎片。<br><strong>存放的内容：</strong> 栈中存放的是局部变量，函数的参数；堆中存放的内容由程序员控制。</p>
 <span id="more"></span>
 
-<h2 id="1、编译预处理"><a href="#1、编译预处理" class="headerlink" title="1、编译预处理"></a>1、编译预处理</h2><p>编译预处理：处理以 # 开头的指令；</p>
-<p>例如：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> </span></span><br><span class="line"><span class="meta">#program once</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="2、编译、优化"><a href="#2、编译、优化" class="headerlink" title="2、编译、优化"></a>2、编译、优化</h2><p>将源码 .cpp 文件翻译成 .s 汇编代码；</p>
-<h2 id="3、汇编"><a href="#3、汇编" class="headerlink" title="3、汇编"></a>3、汇编</h2><p>将汇编代码 .s 翻译成机器指令 .o 文件；</p>
-<h2 id="4、链接"><a href="#4、链接" class="headerlink" title="4、链接"></a>4、链接</h2><p>汇编程序生成的目标文件，即 .o 文件，并不会立即执行，因为可能会出现：.cpp 文件中的函数引用了另一个 .cpp 文件中定义的符号或者调用了某个库文件中的函数。那链接的目的就是将这些文件对应的目标文件连接成一个整体，从而生成可执行的程序 .exe 文件。</p>
-<p><strong>链接包括静态链接和动态链接</strong></p>
-<p><strong>静态链接</strong>：代码从其所在的静态链接库中拷贝到最终的可执行程序中，在该程序被执行时，这些代码会被装入到该进程的虚拟地址空间中。</p>
-<p>通俗的讲：静态链接将程序调用的库一起打包到可执行文件中，这样执行时候就不用调用其他的库，速度快。但是，可能多个文件都链接了同一个库，那么这个库就被打包了很多次，造成了该空间上的浪费。如果这个库更新了的话，整个程序需要重新编译。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038882.png" alt="静态链接"></p>
-<p><strong>动态链接</strong>：代码被放到动态链接库或共享对象的某个目标文件中，链接程序只是在最终的可执行程序中记录了共享对象的名字等一些信息。在程序执行时，动态链接库的全部内容会被映射到运行时相应进行的虚拟地址的空间。</p>
-<p>通俗的讲：动态链接是在程序执行时候才引入的库，因此方便更新。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038200.png" alt="动态链接"></p>
-<p>二者的优缺点：</p>
-<p>静态链接：<strong>浪费空间，</strong>每个可执行程序都会有目标文件的一个副本，这样如果目标文件进行了更新操作，就需要重新进行编译链接生成可执行程序<strong>（更新困难）</strong>；优点就是执行的时候运行<strong>速度快，</strong> 因为可执行程序具备了程序运行的所有内容。<br>动态链接：<strong>节省内存、更新方便</strong>，但是动态链接是在程序运行时，每次执行都需要链接，<strong>相比静态链接会有一定的性能损失。</strong></p>
+<p><strong>问题1：堆的内存为什么是不连续的</strong></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418598.png"></p>
+<p><strong>问题2：堆和栈的不同点</strong></p>
+<p>管理方式：堆-程序员。栈-系统。</p>
+<p>空间大小：堆-不确定。栈-最大容量是系统设定好的。</p>
+<p>生长方向：堆-向高地址扩展，不连续。栈-向低地址扩展，连续。</p>
+<p>分配效率：堆-程序员申请，效率低，容易产生碎片。栈-系统分配，效率高，但是程序员不能控制。</p>
+<p>存放内容：堆-程序员自己申请的内容。栈-局部变量，函数参数等。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418580.png"></p>
 ]]></content>
       <categories>
         <category>C++突击</category>
@@ -370,6 +294,52 @@
 </blockquote>
 <p>include一个头文件，相当于把他带包写到了另一个文件，就会被多次定义。</p>
 <p><strong>所以全局变量应该被定义在源文件中。</strong> 其他程序使用，利用extern进行声明。</p>
+]]></content>
+      <categories>
+        <category>C++突击</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>五星 C++ 内存管理</title>
+    <url>/2022/09/01/%E4%BA%94%E6%98%9FC++%20%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%20-2022-08-29/</url>
+    <content><![CDATA[<p>C++ 内存分区：<strong>栈、堆、全局&#x2F;静态存储区、常量存储区、代码区</strong>。</p>
+<span id="more"></span>
+
+<p><strong>栈</strong>：存放函数的局部变量、函数参数、返回地址等，<strong>由编译器自动分配和释放</strong>。</p>
+<blockquote>
+<p>栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈互相独立。每个函数都有自己的栈，栈被用来在函数之间传递参数。操作系统在切换线程的时候会自动的切换栈，就是切换SS&#x2F;ESP寄存器。栈空间不需要在高级语言里面显式的分配和释放。</p>
+</blockquote>
+<p><strong>堆</strong>：动态申请的内存空间，就是由 **malloc **分配的内存块，<strong>由程序员控制它的分配和释放</strong>，如果程序执行结束还没有释放，操作系统会自动回收。（是可能会会释放，所以说，用完了一定记得要释放，不然会造成内存泄露）。</p>
+<blockquote>
+<p>堆一般由程序员分配释放，若不释放，程序结束时可能由OS回收。注意这里说是可能，并非一定。所以我想再强调一次，记得要释放！注意它与数据结构中的堆是两回事，分配方式倒是类似于链表。</p>
+<p>当内存不再使用的时候，应使用free()函数将内存块释放掉。</p>
+</blockquote>
+<p><strong>全局区&#x2F;静态存储区（.bss 段和 .data 段）</strong>：存放全局变量和静态变量，程序运行结束操作系统自动释放，在 C 语言中，未初始化的放在 .bss 段中，初始化的放在 .data 段中，C++ 中不再区分了。</p>
+<blockquote>
+<p>解释一下静态变量</p>
+<p>静态变量通过关键字static进行声明。</p>
+<p>经static修饰过后的变量或者函数的作用域会发生变化。该变量存储在数据段上，可以改变变量的作用域和生命周期。</p>
+<p><strong>全局静态变量</strong></p>
+<p>在全局变量前面加上关键词static，全局变量就被定义成一个全局静态变量</p>
+<p>（1）内存中的位置：静态存储区（静态存储区在整个程序运行期间都存在）</p>
+<p>（2）初始化：未经初始化的全局静态变量会被程序自动初始化为0</p>
+<p>（3）作用域：全局静态变量在声明他的文件之外是不可见的。准确地讲从定义之处开始到文件结尾。</p>
+<p><strong>局部静态变量</strong></p>
+<p>在局部变量前面加上关键词static，局部变量就被定义成一个局部静态变量。</p>
+<p>（1）内存中的位置：静态存储区</p>
+<p>（2）初始化：未经初始化的局部静态变量会被程序自动初始化为0（自动对象的值是任意的，除非他被显示初始化）</p>
+<p>（3）作用域：作用域仍为局部作用域，当定义它的函数或者语句块结束的时候，作用域随之结束。</p>
+<p><strong>C语言中使用静态函数的好处</strong></p>
+<p>（1）静态函数会被自动分配在一个一直使用的存储区，直到退出程序，<strong>避免了调用函数的压栈出栈</strong>，速度快很多。</p>
+<p>（2）static指函数的作用域仅局限于本文件。不<strong>用担心自己定义的函数是否会与其他文件的函数同名</strong></p>
+</blockquote>
+<p><strong>常量存储区（.data 段）</strong>：存放的是<strong>常量，不允许修改</strong>，程序运行结束自动释放。<br><strong>代码区（.text 段）</strong>：<strong>存放代码，不允许修改</strong>，但可以执行。编译后的二进制文件存放在这里。<br>说明：</p>
+<p>从操作系统的本身来讲，以上存储区在内存中的分布是如下形式(从低地址到高地址)：</p>
+<p><strong>.text 段 –&gt; .data 段 –&gt; .bss 段 –&gt; 堆 –&gt; unused –&gt; 栈 –&gt; env</strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">说明：C++ 中不再区分初始化和未初始化的全局变量、静态变量的存储区，如果非要区分下述程序标注在了括号中</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> g_var = <span class="number">0</span>; <span class="comment">// g_var 在全局区（.data 段）</span></span><br><span class="line"><span class="type">char</span> *gp_var;  <span class="comment">// gp_var 在全局区（.bss 段）</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> var;                    <span class="comment">// var 在栈区</span></span><br><span class="line">    <span class="type">char</span> *p_var;                <span class="comment">// p_var 在栈区</span></span><br><span class="line">    <span class="type">char</span> arr[] = <span class="string">&quot;abc&quot;</span>;         <span class="comment">// arr 为数组变量，存储在栈区；&quot;abc&quot;为字符串常量，存储在常量区</span></span><br><span class="line">    <span class="type">char</span> *p_var1 = <span class="string">&quot;123456&quot;</span>;    <span class="comment">// p_var1 在栈区；&quot;123456&quot;为字符串常量，存储在常量区</span></span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> s_var = <span class="number">0</span>;       <span class="comment">// s_var 为静态变量，存在静态存储区（.data 段）</span></span><br><span class="line">    p_var = (<span class="type">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>); <span class="comment">// 分配得来的 10 个字节的区域在堆区</span></span><br><span class="line">    <span class="built_in">free</span>(p_var);                <span class="comment">// 因为使用了malloc堆的空间，由程序员自己释放掉</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：力扣 (LeetCode)</span><br><span class="line">链接：https:<span class="comment">//leetcode.cn/leetbook/read/cpp-interview-highlights/e4vkxv/</span></span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>C++突击</category>
@@ -498,43 +468,6 @@
       </tags>
   </entry>
   <entry>
-    <title>视觉SLAM十四讲-第二讲：初识SLAM</title>
-    <url>/2022/08/26/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E4%B9%8B%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
-    <content><![CDATA[<p>本文主要介绍视觉SLAM十四讲中第二讲的关键内容。</p>
-<span id="more"></span>
-<h2 id="第二讲：初识SLAM"><a href="#第二讲：初识SLAM" class="headerlink" title="第二讲：初识SLAM"></a>第二讲：初识SLAM</h2><p>一类传感器是<strong>携带于机器人本体上</strong>的，例如机器人的轮式编码器、相机、激光等等 ——通过间接测量数据推算位置，好处是对环境没有提出要求，适用于位置环境。</p>
-<p>一类是<strong>安装于环境中</strong>的，例如前面讲的导轨、二维码标志等等。   —— 约束了外界环境，限制了使用范围</p>
-<blockquote>
-<p>📌</p>
-<p><strong>单目相机</strong>是三维空间的二维投影，因此，如果想恢复三维结构，必须移动相机的视角。</p>
-<p>因此，<strong>单目相机平移之后才能计算深度，并且无法确定真实尺度</strong>，问题的本质在于通过单张图像无法确定深度。</p>
-</blockquote>
-<blockquote>
-<p>📌<strong>双目相机</strong>和<strong>深度相机</strong>，目的在于通过某种手段测量物体距离我们的距离，回复距离信息，因此场景的三维结构可以通过单张图线回复，也就消除了尺度不确定性。</p>
-<p>双目相机测量到的深度范围与基线相关。基线距离越大，能够测量到的就越远</p>
-<p><strong>双目或多目相机的缺点</strong>是配置与标定均较为复杂，其深度量程和精度受双目的基线与分辨率限制，而且视差的计算非常消耗计算资源</p>
-<p><strong>深度相机</strong>（又称 RGB-D 相机)右开始兴起的一种相机，它最大的特点是可以通过红外结构光或 Time-of-Flight（ToF）原理，像激光传感器那样，通过主动向物体发射光并接收返回的光，测出物体离相机的距离。<strong>区别于双目相机是采用计算的方式获得深度，深度相机是通过物理方式，避免了大量的计算。</strong></p>
-</blockquote>
-<p>视觉里程计只计算相邻时刻的运动，而和再往前的过去的信息没有关联。仅通过视觉里程计估计轨迹，将不可避免的出现累积漂移。每次估计都会有一定的误差，由于里程计只估计相邻时刻的运动，先前时刻的误差将会传递到下一时刻，导致一段时间后估计的轨迹不再准确。</p>
-<p>后端优化主要指处理 SLAM 过程中噪声的问题。后端优化要考虑的问题，就是如何从这些带有噪声的数据中，估计整个系统的状态，以及这个状态估计的不确定性有多大——这称为最大后验概率估（Maximum-a-Posteriori，MAP）。</p>
-<p>为了实现回环检测，我们需要让机器人具有识别曾到达过的场景的能力。</p>
-<blockquote>
-<p>📌<strong>SLAM问题的数学表述</strong></p>
-<p><img data-src="https://s2.loli.net/2022/08/26/HR8BbFdckGSAUpP.png" alt="SLAM运动和观测方程.png"></p>
-<p>方程1是运动方程，方程2是观测方程</p>
-<p>其中uk代表传感器输入，z代表传感器观测，y代表路标。</p>
-<p>运动方程:  相机是六自由度姿态，两次位姿之间的关系相差一个旋转矩阵。</p>
-<p>观测方程：z是在xk位置观测到yj所产生的观测数据。例如，在xk看到一个特征点，获得他的像素坐标[u,v]，由三维空间点获得像素坐标，这是<strong>相机模型。</strong></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>视觉SLAM</category>
-      </categories>
-      <tags>
-        <tag>SLAM</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>上传项目至Github并修改init主分支为main</title>
     <url>/2022/08/29/%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E8%87%B3GitHub,%E5%B9%B6%E4%BF%AE%E6%94%B9init%E4%B8%BB%E5%88%86%E6%94%AF%E4%B8%BAmain/</url>
     <content><![CDATA[<p>摘要：本文介绍了如何将本地项目上传至GitHub，并修改init主分支为main。</p>
@@ -587,26 +520,65 @@
       </tags>
   </entry>
   <entry>
-    <title>解决typora提示:This beta version of Typora is expired</title>
-    <url>/2022/08/27/%E8%A7%A3%E5%86%B3typora%E6%8F%90%E7%A4%BAThis%20beta%20version%20of%20Typora%20is%20expired/</url>
-    <content><![CDATA[<p>解决typora提示This beta version of Typora is expired, please download and install a newer version<br>自从typora付费之后也没有怎么使用，后来做git仓库+picgo+typora联动的时候，再次打开typora，弹出了以下窗口：</p>
+    <title>四星 C++ 程序编译过程</title>
+    <url>/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/</url>
+    <content><![CDATA[<p>编译过程可以分为以下三个过程：编译（编译预处理、编译、优化），汇编，链接。<br>其中编译又可以分为编译预处理以及编译优化，就可以划分为四部分。</p>
 <span id="more"></span>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271020322.png" alt="ERROR提示"></p>
-<p>我重新下载了付费版本的typora然后然后开启了15天尝鲜。但是我发现之后再想用typora打开md文档的时候依然会出现这个提示框，并且无论是点击确定还是×掉都依然会跳转到typora的安装界面。</p>
-<p>这个错误提示大概的意思就是beta版本的typora已经过，需要下载最新版本。</p>
-<p>在网上查找了一圈解决办法，目前通过修改注册表解决了我的问题。</p>
-<p>以下是解决步骤：</p>
-<p>1、win+r 打开运行窗口 &amp;#x20;<br>2、在搜索栏输入regedit，回车后打开注册表 &amp;#x20;<br>3、在注册表中找到：计算机\HKEY_CURRENT_USER\Software\Typora &amp;#x20;<br>4、鼠标右键Typora，选择权限 &amp;#x20;<br>5、选择Administraors，将下面的权限选择为拒绝</p>
-<p>点击应用的时候可能会出现提醒，点确定就行了。最后保存设置。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271021324.png" alt="修改typora权限"></p>
-<p>6、重新打开typora，就可以正常应用了。</p>
-<p>以上就是问题的解决方法。</p>
+
+<h2 id="1、编译预处理"><a href="#1、编译预处理" class="headerlink" title="1、编译预处理"></a>1、编译预处理</h2><p>编译预处理：处理以 # 开头的指令；</p>
+<p>例如：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> </span></span><br><span class="line"><span class="meta">#program once</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2、编译、优化"><a href="#2、编译、优化" class="headerlink" title="2、编译、优化"></a>2、编译、优化</h2><p>将源码 .cpp 文件翻译成 .s 汇编代码；</p>
+<h2 id="3、汇编"><a href="#3、汇编" class="headerlink" title="3、汇编"></a>3、汇编</h2><p>将汇编代码 .s 翻译成机器指令 .o 文件；</p>
+<h2 id="4、链接"><a href="#4、链接" class="headerlink" title="4、链接"></a>4、链接</h2><p>汇编程序生成的目标文件，即 .o 文件，并不会立即执行，因为可能会出现：.cpp 文件中的函数引用了另一个 .cpp 文件中定义的符号或者调用了某个库文件中的函数。那链接的目的就是将这些文件对应的目标文件连接成一个整体，从而生成可执行的程序 .exe 文件。</p>
+<p><strong>链接包括静态链接和动态链接</strong></p>
+<p><strong>静态链接</strong>：代码从其所在的静态链接库中拷贝到最终的可执行程序中，在该程序被执行时，这些代码会被装入到该进程的虚拟地址空间中。</p>
+<p>通俗的讲：静态链接将程序调用的库一起打包到可执行文件中，这样执行时候就不用调用其他的库，速度快。但是，可能多个文件都链接了同一个库，那么这个库就被打包了很多次，造成了该空间上的浪费。如果这个库更新了的话，整个程序需要重新编译。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038882.png" alt="静态链接"></p>
+<p><strong>动态链接</strong>：代码被放到动态链接库或共享对象的某个目标文件中，链接程序只是在最终的可执行程序中记录了共享对象的名字等一些信息。在程序执行时，动态链接库的全部内容会被映射到运行时相应进行的虚拟地址的空间。</p>
+<p>通俗的讲：动态链接是在程序执行时候才引入的库，因此方便更新。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038200.png" alt="动态链接"></p>
+<p>二者的优缺点：</p>
+<p>静态链接：<strong>浪费空间，</strong>每个可执行程序都会有目标文件的一个副本，这样如果目标文件进行了更新操作，就需要重新进行编译链接生成可执行程序<strong>（更新困难）</strong>；优点就是执行的时候运行<strong>速度快，</strong> 因为可执行程序具备了程序运行的所有内容。<br>动态链接：<strong>节省内存、更新方便</strong>，但是动态链接是在程序运行时，每次执行都需要链接，<strong>相比静态链接会有一定的性能损失。</strong></p>
 ]]></content>
       <categories>
-        <category>一些奇奇怪怪的问题之windows</category>
+        <category>C++突击</category>
       </categories>
       <tags>
-        <tag>typora</tag>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>将构造函数/析构函数设置为私有（如何构建单例模型）</title>
+    <url>/2022/09/14/%E5%B0%86%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E8%AE%BE%E7%BD%AE%E4%B8%BA%E7%A7%81%E6%9C%89%EF%BC%88%E5%A6%82%E4%BD%95%E6%9E%84%E5%BB%BA%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%9E%8B%EF%BC%89/</url>
+    <content><![CDATA[<p>两种使用场景：第一种只希望构建子类的对象，而不构建基类的对象。第二种，构建单例模型，利用静态成员函数生成类的实例</p>
+<span id="more"></span>
+<h2 id="第一种使用情景："><a href="#第一种使用情景：" class="headerlink" title="第一种使用情景："></a>第一种使用情景：</h2><p>对于类A 不想让外面的用户直接构造一个类A的对象，而是希望用户只构造类A的子类，那么可以将A的构造&#x2F;析构函数声明为protected,将类A的子类的构造函数&#x2F;析构函数声明为public，例如：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123; </span><br><span class="line"><span class="keyword">protected</span>: </span><br><span class="line">    <span class="built_in">A</span>()&#123;&#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">   <span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">       cout &lt;&lt; <span class="string">&quot;call A test()&quot;</span> &lt;&lt; endl;</span><br><span class="line">   &#125; </span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> : <span class="keyword">public</span> A</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>: <span class="built_in">B</span>()&#123;&#125;</span><br><span class="line">    </span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A a; <span class="comment">// error</span></span><br><span class="line">    B b; <span class="comment">// ok</span></span><br><span class="line">    b.<span class="built_in">test</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基类的构造函数被protected，外部无法访问，也就无法构造示例。但子类将基类的public和protected成员都继承为public，子类可以调用基类的函数。</p>
+<h2 id="第二种使用场景："><a href="#第二种使用场景：" class="headerlink" title="第二种使用场景："></a>第二种使用场景：</h2><p>单例模型</p>
+<p>当构造函数&#x2F;析构函数被声明为private，那么无法构造类的对象，就只能使用类的内部的函数构造类的对象了。但是类的成员函数需要有类的对象才能够调用，外部不能直接构造一个对象出来。因此，我们需要将构造对象的函数声明为<code>static</code>，这样我们通过类就可以直接访问和调用静态成员函数。静态成员函数可以通过类直接调用。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">A</span>():<span class="built_in">data</span>(<span class="number">10</span>)&#123; cout &lt;&lt; <span class="string">&quot;A&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">    ~<span class="built_in">A</span>()&#123; cout &lt;&lt; <span class="string">&quot;~A&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">static</span> A&amp; <span class="title">Instance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">static</span> A a;</span><br><span class="line">        <span class="keyword">return</span> a;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Print</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout &lt;&lt; data &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> data;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A&amp; ra = A::<span class="built_in">Instance</span>();</span><br><span class="line">    ra.<span class="built_in">Print</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><p>定义一个单例类：</p>
+<ol>
+<li><p>私有化它的构造函数，以防止外界创建单例类的对象；</p>
+</li>
+<li><p>使用类的私有静态指针变量指向类的唯一实例；</p>
+</li>
+<li><p>使用一个公有的静态方法获取该实例。</p>
+</li>
+</ol>
+<p><strong>参考文献</strong>：</p>
+<p><a href="https://blog.csdn.net/fly542/article/details/8055207">https://blog.csdn.net/fly542/article/details/8055207</a></p>
+]]></content>
+      <categories>
+        <category>c++常用知识</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
       </tags>
   </entry>
   <entry>
@@ -778,6 +750,66 @@
       </categories>
       <tags>
         <tag>SLAM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>视觉SLAM十四讲-第二讲：初识SLAM</title>
+    <url>/2022/08/26/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E4%B9%8B%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
+    <content><![CDATA[<p>本文主要介绍视觉SLAM十四讲中第二讲的关键内容。</p>
+<span id="more"></span>
+<h2 id="第二讲：初识SLAM"><a href="#第二讲：初识SLAM" class="headerlink" title="第二讲：初识SLAM"></a>第二讲：初识SLAM</h2><p>一类传感器是<strong>携带于机器人本体上</strong>的，例如机器人的轮式编码器、相机、激光等等 ——通过间接测量数据推算位置，好处是对环境没有提出要求，适用于位置环境。</p>
+<p>一类是<strong>安装于环境中</strong>的，例如前面讲的导轨、二维码标志等等。   —— 约束了外界环境，限制了使用范围</p>
+<blockquote>
+<p>📌</p>
+<p><strong>单目相机</strong>是三维空间的二维投影，因此，如果想恢复三维结构，必须移动相机的视角。</p>
+<p>因此，<strong>单目相机平移之后才能计算深度，并且无法确定真实尺度</strong>，问题的本质在于通过单张图像无法确定深度。</p>
+</blockquote>
+<blockquote>
+<p>📌<strong>双目相机</strong>和<strong>深度相机</strong>，目的在于通过某种手段测量物体距离我们的距离，回复距离信息，因此场景的三维结构可以通过单张图线回复，也就消除了尺度不确定性。</p>
+<p>双目相机测量到的深度范围与基线相关。基线距离越大，能够测量到的就越远</p>
+<p><strong>双目或多目相机的缺点</strong>是配置与标定均较为复杂，其深度量程和精度受双目的基线与分辨率限制，而且视差的计算非常消耗计算资源</p>
+<p><strong>深度相机</strong>（又称 RGB-D 相机)右开始兴起的一种相机，它最大的特点是可以通过红外结构光或 Time-of-Flight（ToF）原理，像激光传感器那样，通过主动向物体发射光并接收返回的光，测出物体离相机的距离。<strong>区别于双目相机是采用计算的方式获得深度，深度相机是通过物理方式，避免了大量的计算。</strong></p>
+</blockquote>
+<p>视觉里程计只计算相邻时刻的运动，而和再往前的过去的信息没有关联。仅通过视觉里程计估计轨迹，将不可避免的出现累积漂移。每次估计都会有一定的误差，由于里程计只估计相邻时刻的运动，先前时刻的误差将会传递到下一时刻，导致一段时间后估计的轨迹不再准确。</p>
+<p>后端优化主要指处理 SLAM 过程中噪声的问题。后端优化要考虑的问题，就是如何从这些带有噪声的数据中，估计整个系统的状态，以及这个状态估计的不确定性有多大——这称为最大后验概率估（Maximum-a-Posteriori，MAP）。</p>
+<p>为了实现回环检测，我们需要让机器人具有识别曾到达过的场景的能力。</p>
+<blockquote>
+<p>📌<strong>SLAM问题的数学表述</strong></p>
+<p><img data-src="https://s2.loli.net/2022/08/26/HR8BbFdckGSAUpP.png" alt="SLAM运动和观测方程.png"></p>
+<p>方程1是运动方程，方程2是观测方程</p>
+<p>其中uk代表传感器输入，z代表传感器观测，y代表路标。</p>
+<p>运动方程:  相机是六自由度姿态，两次位姿之间的关系相差一个旋转矩阵。</p>
+<p>观测方程：z是在xk位置观测到yj所产生的观测数据。例如，在xk看到一个特征点，获得他的像素坐标[u,v]，由三维空间点获得像素坐标，这是<strong>相机模型。</strong></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>视觉SLAM</category>
+      </categories>
+      <tags>
+        <tag>SLAM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决typora提示:This beta version of Typora is expired</title>
+    <url>/2022/08/27/%E8%A7%A3%E5%86%B3typora%E6%8F%90%E7%A4%BAThis%20beta%20version%20of%20Typora%20is%20expired/</url>
+    <content><![CDATA[<p>解决typora提示This beta version of Typora is expired, please download and install a newer version<br>自从typora付费之后也没有怎么使用，后来做git仓库+picgo+typora联动的时候，再次打开typora，弹出了以下窗口：</p>
+<span id="more"></span>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271020322.png" alt="ERROR提示"></p>
+<p>我重新下载了付费版本的typora然后然后开启了15天尝鲜。但是我发现之后再想用typora打开md文档的时候依然会出现这个提示框，并且无论是点击确定还是×掉都依然会跳转到typora的安装界面。</p>
+<p>这个错误提示大概的意思就是beta版本的typora已经过，需要下载最新版本。</p>
+<p>在网上查找了一圈解决办法，目前通过修改注册表解决了我的问题。</p>
+<p>以下是解决步骤：</p>
+<p>1、win+r 打开运行窗口 &amp;#x20;<br>2、在搜索栏输入regedit，回车后打开注册表 &amp;#x20;<br>3、在注册表中找到：计算机\HKEY_CURRENT_USER\Software\Typora &amp;#x20;<br>4、鼠标右键Typora，选择权限 &amp;#x20;<br>5、选择Administraors，将下面的权限选择为拒绝</p>
+<p>点击应用的时候可能会出现提醒，点确定就行了。最后保存设置。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271021324.png" alt="修改typora权限"></p>
+<p>6、重新打开typora，就可以正常应用了。</p>
+<p>以上就是问题的解决方法。</p>
+]]></content>
+      <categories>
+        <category>一些奇奇怪怪的问题之windows</category>
+      </categories>
+      <tags>
+        <tag>typora</tag>
       </tags>
   </entry>
 </search>
