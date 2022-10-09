@@ -1,34 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>160.相交链表</title>
-    <url>/2022/09/06/160.%20%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8%20%20%20%20-%20%20%20%202022-09-06/</url>
-    <content><![CDATA[<p>给你两个单链表的头节点 <code>headA</code> 和 <code>headB</code> ，请你找出并返回两个单链表相交的起始节点。</p>
-<span id="more"></span>
-<p><strong>【题目】</strong></p>
-<blockquote>
-<p>给你两个单链表的头节点 <code>headA</code> 和 <code>headB</code> ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 <code>null</code> 。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209062059291.png"></p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209062059102.png"></p>
-</blockquote>
-<blockquote>
-<p>分析：对我而言，这道问题的关键在于相交的定义。相交之后的全部节点都是相同的。因此如果存在相交，两个链表的末端应该是相等的。那么最长的情况就是，长的链表完全包含短的链表。所以我们需要对两个链表进行尾端对齐。</p>
-</blockquote>
-<hr>
-<p>【解答】</p>
-<p>1、 尾端对齐</p>
-<p>时间复杂度O（m+n）,空间复杂度O（1）</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode *<span class="title">getIntersectionNode</span><span class="params">(ListNode *headA, ListNode *headB)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 链表相交代表 相交后的节点都完全一致，最长就是完全覆盖短的链表，短的链表一直到长链表的尾部都重合。</span></span><br><span class="line">        <span class="comment">// 因此，先将链表的尾部对齐，只要是相交，尾部都是对齐的。</span></span><br><span class="line">        <span class="type">int</span> lenA = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> lenB = <span class="number">0</span>;</span><br><span class="line">        ListNode* curA = headA;</span><br><span class="line">        ListNode* curB = headB;</span><br><span class="line">        <span class="comment">//获得链表A长度</span></span><br><span class="line">        <span class="keyword">while</span> (curA -&gt; next != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            lenA++;</span><br><span class="line">            curA = curA -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//获得链表B长度</span></span><br><span class="line">        <span class="keyword">while</span> (curB -&gt; next != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            lenB++;</span><br><span class="line">            curB = curB -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//将curA curB置位</span></span><br><span class="line">        curB = headB;</span><br><span class="line">        curA = headA;</span><br><span class="line">        <span class="comment">//将长度更长的置为 A</span></span><br><span class="line">        <span class="keyword">while</span> (lenA &lt; lenB) &#123;</span><br><span class="line">            <span class="built_in">swap</span> (lenA, lenB);</span><br><span class="line">            <span class="built_in">swap</span> (curA, curB);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> n = lenA - lenB;</span><br><span class="line">        <span class="keyword">while</span> (n--) &#123;</span><br><span class="line">            curA = curA -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (curA != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (curA == curB) &#123;</span><br><span class="line">                <span class="keyword">return</span> curA;</span><br><span class="line">            &#125;</span><br><span class="line">            curA = curA -&gt; next;</span><br><span class="line">            curB = curB -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>LeetCode之链表</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
-        <tag>LeetCode</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>142.环形链表II</title>
     <url>/2022/09/06/142.%20%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8II%20%20%20%20-%20%20%20%202022-09-06/</url>
     <content><![CDATA[<p>给定一个链表的头节点  head ，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。</p>
@@ -117,6 +89,90 @@
       </tags>
   </entry>
   <entry>
+    <title>160.相交链表</title>
+    <url>/2022/09/06/160.%20%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8%20%20%20%20-%20%20%20%202022-09-06/</url>
+    <content><![CDATA[<p>给你两个单链表的头节点 <code>headA</code> 和 <code>headB</code> ，请你找出并返回两个单链表相交的起始节点。</p>
+<span id="more"></span>
+<p><strong>【题目】</strong></p>
+<blockquote>
+<p>给你两个单链表的头节点 <code>headA</code> 和 <code>headB</code> ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 <code>null</code> 。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209062059291.png"></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209062059102.png"></p>
+</blockquote>
+<blockquote>
+<p>分析：对我而言，这道问题的关键在于相交的定义。相交之后的全部节点都是相同的。因此如果存在相交，两个链表的末端应该是相等的。那么最长的情况就是，长的链表完全包含短的链表。所以我们需要对两个链表进行尾端对齐。</p>
+</blockquote>
+<hr>
+<p>【解答】</p>
+<p>1、 尾端对齐</p>
+<p>时间复杂度O（m+n）,空间复杂度O（1）</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode *<span class="title">getIntersectionNode</span><span class="params">(ListNode *headA, ListNode *headB)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 链表相交代表 相交后的节点都完全一致，最长就是完全覆盖短的链表，短的链表一直到长链表的尾部都重合。</span></span><br><span class="line">        <span class="comment">// 因此，先将链表的尾部对齐，只要是相交，尾部都是对齐的。</span></span><br><span class="line">        <span class="type">int</span> lenA = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> lenB = <span class="number">0</span>;</span><br><span class="line">        ListNode* curA = headA;</span><br><span class="line">        ListNode* curB = headB;</span><br><span class="line">        <span class="comment">//获得链表A长度</span></span><br><span class="line">        <span class="keyword">while</span> (curA -&gt; next != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            lenA++;</span><br><span class="line">            curA = curA -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//获得链表B长度</span></span><br><span class="line">        <span class="keyword">while</span> (curB -&gt; next != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            lenB++;</span><br><span class="line">            curB = curB -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//将curA curB置位</span></span><br><span class="line">        curB = headB;</span><br><span class="line">        curA = headA;</span><br><span class="line">        <span class="comment">//将长度更长的置为 A</span></span><br><span class="line">        <span class="keyword">while</span> (lenA &lt; lenB) &#123;</span><br><span class="line">            <span class="built_in">swap</span> (lenA, lenB);</span><br><span class="line">            <span class="built_in">swap</span> (curA, curB);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> n = lenA - lenB;</span><br><span class="line">        <span class="keyword">while</span> (n--) &#123;</span><br><span class="line">            curA = curA -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (curA != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (curA == curB) &#123;</span><br><span class="line">                <span class="keyword">return</span> curA;</span><br><span class="line">            &#125;</span><br><span class="line">            curA = curA -&gt; next;</span><br><span class="line">            curB = curB -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>LeetCode之链表</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C++ 详解构造函数，默认构造，拷贝构造，自定义构造</title>
+    <url>/2022/10/09/c++%20%E8%AF%A6%E8%A7%A3%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%20%20%20%20-%20%20%20%202022-09-26/</url>
+    <content><![CDATA[<p>如何禁止构造函数的使用，什么是类的默认构造函数？构造函数、析构函数和虚函数，拷贝构造函数，一篇解决</p>
+<span id="more"></span>
+<h2 id="如何禁止构造函数的使用"><a href="#如何禁止构造函数的使用" class="headerlink" title="如何禁止构造函数的使用"></a>如何禁止构造函数的使用</h2><p>可以为类的构造函数增加<code>delete</code>修饰符，虽然晟敏改了构造函数但是禁止使用</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> var1, var2;</span><br><span class="line">    <span class="built_in">A</span>()&#123;</span><br><span class="line">        var1 = <span class="number">10</span>;</span><br><span class="line">        var2 = <span class="number">20</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">A</span>(<span class="type">int</span> tmp1, <span class="type">int</span> tmp2) = <span class="keyword">delete</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A ex1;    </span><br><span class="line">    <span class="function">A <span class="title">ex2</span><span class="params">(<span class="number">12</span>,<span class="number">13</span>)</span></span>; <span class="comment">// error: use of deleted function &#x27;A::A(int, int)&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="什么是类的默认构造函数？"><a href="#什么是类的默认构造函数？" class="headerlink" title="什么是类的默认构造函数？"></a>什么是类的默认构造函数？</h2><p>默认构造函数不提供任何实参。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>()&#123; <span class="comment">// 类的默认构造函数</span></span><br><span class="line">        var = <span class="number">10</span>;</span><br><span class="line">        c = <span class="string">&#x27;q&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> var;</span><br><span class="line">    <span class="type">char</span> c;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A ex;</span><br><span class="line">    cout &lt;&lt; ex.c &lt;&lt; endl &lt;&lt; ex.var &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">运行结果：</span></span><br><span class="line"><span class="comment">q</span></span><br><span class="line"><span class="comment">10</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="构造函数、析构函数和虚函数"><a href="#构造函数、析构函数和虚函数" class="headerlink" title="构造函数、析构函数和虚函数"></a>构造函数、析构函数和虚函数</h2><p><strong>构造函数一般不定义为虚函数。</strong> 构造函数是在实例化对象的时候进行调用，如果此时将构造函数定义为虚函数，需要访问对象内存空间中的虚表指针，指向虚函数表找到对应的虚函数。虚函数表是与类绑定的，所以编译的时候就有，但是只有创建了对象才有虚函数指针，但是得通过构造函数创建对象，对象还没有创建，所以也无法进行虚函数的调用。</p>
+<p><strong>析构函数一般要定义为虚函数。</strong> 析构函数是要对象进行释放的，如果类之间由继承的关系，用基类指针指向了派生类的对象，但没有定义成虚函数，那么就不能调用对象各自的析构函数，就会造成内存泄漏。</p>
+<h2 id="拷贝构造函数"><a href="#拷贝构造函数" class="headerlink" title="拷贝构造函数"></a>拷贝构造函数</h2><p>复制构造函数是构造函数的一种，也称拷贝构造函数，它只有一个参数，参数类型是本类的引用。</p>
+<p>如果类的构造者自己不写构造函数的话，编译器也会自动生成一个拷贝构造函数，所以拷贝构造函数是一直存在的。如果自己写构造函数的话，那么就会覆盖掉默认的拷贝构造函数；</p>
+<p>拷贝构造函数的一般定义：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">classname</span> (<span class="type">const</span> classname &amp;obj);</span><br></pre></td></tr></table></figure>
+
+<p><strong>所以说本质就是对于类的对象的引用，通过已有的对象来初始化一个新的对象</strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">A</span> (<span class="type">const</span> A &amp;obj);</span><br></pre></td></tr></table></figure>
+
+<p>使用拷贝构造函数初始化一个新的对象：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">A <span class="title">c1</span><span class="params">(<span class="number">1</span>,<span class="number">2</span>)</span></span>; <span class="comment">// 使用自己写的构造函数初始化了一个对象c1</span></span><br><span class="line"><span class="function">A <span class="title">c2</span><span class="params">(c1)</span></span>;  <span class="comment">// 使用已经初始化好的对象，通过拷贝构造函数创建了一个新的对象</span></span><br></pre></td></tr></table></figure>
+
+<p>使用自定义的拷贝构造函数初始化一个对象：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Complex</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">double</span> real, imag;</span><br><span class="line">    <span class="built_in">Complex</span>(<span class="type">double</span> r,<span class="type">double</span> i)&#123;</span><br><span class="line">        real = r; imag = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">Complex</span>(<span class="type">const</span> Complex &amp; c)&#123; <span class="comment">// 自己定义的拷贝</span></span><br><span class="line">        real = c.real; imag = c.imag;</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;Copy Constructor called&quot;</span>&lt;&lt;endl ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="function">Complex <span class="title">cl</span><span class="params">(<span class="number">1</span>, <span class="number">2</span>)</span></span>;</span><br><span class="line">    <span class="function">Complex <span class="title">c2</span> <span class="params">(cl)</span></span>;  <span class="comment">//调用复制构造函数</span></span><br><span class="line">    cout&lt;&lt;c2.real&lt;&lt;<span class="string">&quot;,&quot;</span>&lt;&lt;c2.imag;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">Complex <span class="title">c2</span><span class="params">(c1)</span></span>;</span><br><span class="line">Complex c2 = c1;<span class="comment">//这两条语句是等价的</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="禁用拷贝构造函数-x2F-避免拷贝"><a href="#禁用拷贝构造函数-x2F-避免拷贝" class="headerlink" title="禁用拷贝构造函数&#x2F;避免拷贝"></a>禁用拷贝构造函数&#x2F;避免拷贝</h2><p>在c++11之后，出现了<code>delete</code>弃置函数关键帧字，就像之前我们可以直接用delete不用构造函数一样。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">noncopyable</span> &#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="built_in">noncopyable</span>() = <span class="keyword">default</span>;</span><br><span class="line">    ~<span class="built_in">noncopyable</span>() = <span class="keyword">default</span>;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">noncopyable</span>(<span class="type">const</span> noncopyable&amp;) = <span class="keyword">delete</span>; <span class="comment">//拷贝构造函数</span></span><br><span class="line">    noncopyable&amp; <span class="keyword">operator</span>=(<span class="type">const</span> noncopyable&amp;) = <span class="keyword">delete</span>; <span class="comment">// 赋值构造函数</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">foo</span> : <span class="keyword">private</span> noncopyable &#123; </span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>使用<code>operator</code>关键字将c++中原本的运算符进行重载。</p>
+<p>使用的基本方式：</p>
+<p>如果运算符重载是类的成员函数：(参数列表里写一个参数就行了)</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">&#123;返回类型&#125; <span class="keyword">operator</span> &#123;运算符&#125; &#123;参数列表&#125;</span><br><span class="line">Box <span class="keyword">operator</span> + (<span class="type">const</span> Box&amp;)</span><br></pre></td></tr></table></figure>
+
+<p>如果运算符重载不是类的成员函数：(参数列表里两个都要写出来)</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Box <span class="keyword">operator</span> + (<span class="type">const</span> Box&amp;,<span class="type">const</span> Box&amp;)</span><br></pre></td></tr></table></figure>
+
+<p>通过运算符重载，我们可以定义赋值构造函数：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">返回类型：noncopyable&amp;</span><br><span class="line">关键字：<span class="keyword">operator</span></span><br><span class="line">运算符：=</span><br><span class="line">参数：<span class="type">const</span> noncopyable&amp;</span><br><span class="line">noncopyable&amp; <span class="keyword">operator</span>=(<span class="type">const</span> noncopyable&amp;) </span><br></pre></td></tr></table></figure>
+
+<h2 id="如何减少构造函数的开销"><a href="#如何减少构造函数的开销" class="headerlink" title="如何减少构造函数的开销"></a>如何减少构造函数的开销</h2><p><strong>在构造函数中使用类初始化列表会较少调用默认的构造函数产生的开销</strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">A</span> (): <span class="built_in">ex</span>(<span class="number">1</span>) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不在函数体内对变量赋值，而是在参数列表后，跟一个冒号和初始化列表，效率会更好。</p>
+<p>对于类内部非内置类型成员，初始化列表：只调用一次构造；在函数体内赋值：一次默认构造+一次拷贝赋值。非内置类型如string,容器等。</p>
+]]></content>
+      <categories>
+        <category>C++突击</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>三星 C++ 怎么防止内存泄漏</title>
     <url>/2022/09/13/%E4%B8%89%E6%98%9F%20%E6%80%8E%E4%B9%88%E9%98%B2%E6%AD%A2%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%EF%BC%9F%20%20%20%20-%20%20%20%202022-09-05/</url>
     <content><![CDATA[<p>内存泄漏将会导致系统内存中无用的空间越来越多，最终导致内存不足，内存爆炸。所以，有必要防止内存泄漏。本文介绍了两种防止内存泄漏的方法以及内存泄漏检测工具valgrind的实现原理。</p>
@@ -132,6 +188,55 @@
 ]]></content>
       <categories>
         <category>c++突击</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C++ 详解虚函数和纯虚函数</title>
+    <url>/2022/10/09/c++%E8%AF%A6%E8%A7%A3%E8%99%9A%E5%87%BD%E6%95%B0%E5%92%8C%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0%20%20%20%20-%20%20%20%202022-09-24/</url>
+    <content><![CDATA[<p>多态性是面向对象三大特性之一。封装、继承和多态——三大特性。</p>
+<p>多态性分为编译时的多态性和运行时候的多态性。</p>
+<p>多态性指相同对象收到不同消息或不同对象收到相同消息时产生不同的实现动作。</p>
+<p>编译时： 重载函数、运算符重载</p>
+<p>运行时：虚函数和继承实现</p>
+<span id="more"></span>
+
+<p>纯虚函数是在定义的时候在末尾加上<code> =0</code>；</p>
+<p>纯虚函数可以让类先具有一个操作名称，而没有操作内容，让派生类在继承时再去具体地给出定义。凡是含有纯虚函数的类叫做<a href="https://baike.baidu.com/item/%E6%8A%BD%E8%B1%A1%E7%B1%BB?fromModule=lemma_inlink" title="抽象类">抽象类</a>。这种类不能声明对象，只是作为基类为派生类服务。除非在派生类中完全实现基类中所有的的纯虚函数，否则，派生类也变成了抽象类，不能实例化对象。</p>
+<p>定义一个函数为纯虚函数，代表函数没有被实现，等待派生类对其进行实现。</p>
+<p>定义一个函数为虚函数，不代表没有被实现，只是为了允许基类的指针指向派生类对象的时候，可以调用对应的派生类函数。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">funtion1</span><span class="params">()</span></span>=<span class="number">0</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>带有纯虚函数的类叫做抽象类。纯虚函数最显著的特征是，他们必学在 继承类中重新声明函数。</p>
+<p>抽象类只能作为基类使用，抽象类不能定义实例，但是可以声明指向该抽象类的具体类的指针或者引用。</p>
+<p>友元函数不是成员函数，可以访问私有成员，但是只有成员函数才是可以虚拟的，所以友元函数不能是虚拟函数。</p>
+<h3 id="虚函数和纯虚函数的区别"><a href="#虚函数和纯虚函数的区别" class="headerlink" title="虚函数和纯虚函数的区别"></a>虚函数和纯虚函数的区别</h3><p>1、虚函数和纯虚函数可以出现在同一个类中，该类称为抽象类基类</p>
+<p>2、使用方式不同，虚函数可以直接使用，但是纯虚函数必须在派生类中实现后才能使用</p>
+<p>3、定义形式不同，纯虚函数需要virtual关键字+ &#x3D;0，虚函数只加virtual关键字就可以了</p>
+<p>4、虚函数必须实现，否则编译器会报错</p>
+<p>5、虚函数和纯虚函数都可以在派生类中重写</p>
+<p>6、基类的析构函数最好定义为虚函数，否则派生类对象可能会造成内存泄漏，考虑如下代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="type">int</span> baseData;</span><br><span class="line">  ~<span class="built_in">Base</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="type">int</span> derivedData;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  Base* b = <span class="keyword">new</span> <span class="built_in">Derived</span>();</span><br><span class="line">  <span class="keyword">delete</span> b;  <span class="comment">// 由于 Base 的析构函数不是虚函数，</span></span><br><span class="line">        <span class="comment">// 这里调用的是 Base 的析构函数，</span></span><br><span class="line">        <span class="comment">// 而非 Derived 的析构函数,</span></span><br><span class="line">        <span class="comment">// 因此，Derived 里的 derivedData 没有被释放，</span></span><br><span class="line">        <span class="comment">// 因此，内存泄漏。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果一个类被其他类继承，那么析构函数最好声明为虚函数。</p>
+<h3 id="虚函数的实现机制"><a href="#虚函数的实现机制" class="headerlink" title="虚函数的实现机制"></a>虚函数的实现机制</h3><p>虚函数是通过虚函数表实现的，虚函数表中，包含了虚函数的地址。<strong>虚函数表是和类绑定的</strong>，也就是类的所有对象用的都是同一张虚函数表。在类的对象所存在的内存空间中，保存了指向虚函数表的指针，被称虚表指针，通过虚表指针可以找到类的虚函数表。<strong>所以虚表指针是和对象绑定的，每个对象的虚表指针不一样，但是指向的是同一张表。</strong></p>
+<p>无虚函数覆盖情况下的虚函数表：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">B_fun1</span><span class="params">()</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;Base::B_fun1()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">B_fun2</span><span class="params">()</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;Base::B_fun2()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">B_fun3</span><span class="params">()</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;Base::B_fun3()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derive</span> : <span class="keyword">public</span> Base</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">D_fun1</span><span class="params">()</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;Derive::D_fun1()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">D_fun2</span><span class="params">()</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;Derive::D_fun2()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">D_fun3</span><span class="params">()</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;Derive::D_fun3()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Base *p = <span class="keyword">new</span> <span class="built_in">Derive</span>();</span><br><span class="line">    p-&gt;<span class="built_in">B_fun1</span>(); <span class="comment">// Base::B_fun1()</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>基类和派生类的继承关系</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202210091501938.png"></p>
+<p>基类的虚函数表：</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202210091501050.png"></p>
+<p>派生类的虚函数表：</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202210091501889.png"></p>
+<p>子类没有重写虚函数的时候，子类对象的虚表指针指向基类的虚函数表，子类没有虚函数表。但是当子类重写基类虚函数或者添加了一个新的虚函数的时候，子类会有一个自己的虚函数表，表中会存放基类虚函数的地址</p>
+<h3 id="单继承和多继承的虚函数表结构"><a href="#单继承和多继承的虚函数表结构" class="headerlink" title="单继承和多继承的虚函数表结构"></a>单继承和多继承的虚函数表结构</h3><p>两个父类的多继承（其他以此类推）总结：</p>
+<p>两个虚函数指针分别指两个虚函数表。每个虚函数表保存每个父类的虚函数地址。<strong>即，继承多个基类的时候，子类有多个虚表指针。</strong><br>内存布局与继承的父类的顺序有关，<strong>子类的虚函数插入到第一个虚指针所指的虚函数表中。</strong><br>特别关注子类的虚析构函数。第二个虚指针调用虚析构函数时，会跳转到第一个虚函数表调用子类虚析构函数。<br>子类的虚函数表中虚函数的顺序与父类一样，若子类重写父类虚函数，即在<strong>虚函数表中原位置覆盖</strong>即可。</p>
+]]></content>
+      <categories>
+        <category>C++突击</category>
       </categories>
       <tags>
         <tag>c++</tag>
@@ -159,29 +264,6 @@
 ]]></content>
       <categories>
         <category>c++突击</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>五星 C++ 堆和栈的区别</title>
-    <url>/2022/09/02/%E4%BA%94%E6%98%9F%20C++%E6%A0%88%E5%92%8C%E5%A0%86%E7%9A%84%E5%8C%BA%E5%88%AB%20%20%20-%20%20%20%202022-08-29/</url>
-    <content><![CDATA[<p><strong>申请方式：</strong> 栈是系统自动分配，堆是程序员主动申请。<strong>申请后系统响应：</strong>分配栈空间，如果剩余空间大于申请空间则分配成功，否则分配失败栈溢出；申请堆空间，堆在内存中呈现的方式类似于链表（记录空闲地址空间的链表），在链表上寻找第一个大于申请空间的节点分配给程序，将该节点从链表中删除，大多数系统中该块空间的首地址存放的是本次分配空间的大小，便于释放，将该块空间上的剩余空间再次连接在空闲链表上。<br>栈在内存中是连续的一块空间（向低地址扩展）<strong>最大容量是系统预定好的</strong>，堆在内存中的空间（向高地址扩展）是<strong>不连续</strong>的。<br><strong>申请效率：</strong> 栈是有系统自动分配，申请效率高，但程序员无法控制；堆是由程序员主动申请，效率低，使用起来方便但是容易产生碎片。<br><strong>存放的内容：</strong> 栈中存放的是局部变量，函数的参数；堆中存放的内容由程序员控制。</p>
-<span id="more"></span>
-
-<p><strong>问题1：堆的内存为什么是不连续的</strong></p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418598.png"></p>
-<p><strong>问题2：堆和栈的不同点</strong></p>
-<p>管理方式：堆-程序员。栈-系统。</p>
-<p>空间大小：堆-不确定。栈-最大容量是系统设定好的。</p>
-<p>生长方向：堆-向高地址扩展，不连续。栈-向低地址扩展，连续。</p>
-<p>分配效率：堆-程序员申请，效率低，容易产生碎片。栈-系统分配，效率高，但是程序员不能控制。</p>
-<p>存放内容：堆-程序员自己申请的内容。栈-局部变量，函数参数等。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418580.png"></p>
-]]></content>
-      <categories>
-        <category>C++突击</category>
       </categories>
       <tags>
         <tag>c++</tag>
@@ -227,43 +309,20 @@
       </tags>
   </entry>
   <entry>
-    <title>五星 C++ 内存管理</title>
-    <url>/2022/09/01/%E4%BA%94%E6%98%9FC++%20%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%20-2022-08-29/</url>
-    <content><![CDATA[<p>C++ 内存分区：<strong>栈、堆、全局&#x2F;静态存储区、常量存储区、代码区</strong>。</p>
+    <title>五星 C++ 堆和栈的区别</title>
+    <url>/2022/09/02/%E4%BA%94%E6%98%9F%20C++%E6%A0%88%E5%92%8C%E5%A0%86%E7%9A%84%E5%8C%BA%E5%88%AB%20%20%20-%20%20%20%202022-08-29/</url>
+    <content><![CDATA[<p><strong>申请方式：</strong> 栈是系统自动分配，堆是程序员主动申请。<strong>申请后系统响应：</strong>分配栈空间，如果剩余空间大于申请空间则分配成功，否则分配失败栈溢出；申请堆空间，堆在内存中呈现的方式类似于链表（记录空闲地址空间的链表），在链表上寻找第一个大于申请空间的节点分配给程序，将该节点从链表中删除，大多数系统中该块空间的首地址存放的是本次分配空间的大小，便于释放，将该块空间上的剩余空间再次连接在空闲链表上。<br>栈在内存中是连续的一块空间（向低地址扩展）<strong>最大容量是系统预定好的</strong>，堆在内存中的空间（向高地址扩展）是<strong>不连续</strong>的。<br><strong>申请效率：</strong> 栈是有系统自动分配，申请效率高，但程序员无法控制；堆是由程序员主动申请，效率低，使用起来方便但是容易产生碎片。<br><strong>存放的内容：</strong> 栈中存放的是局部变量，函数的参数；堆中存放的内容由程序员控制。</p>
 <span id="more"></span>
 
-<p><strong>栈</strong>：存放函数的局部变量、函数参数、返回地址等，<strong>由编译器自动分配和释放</strong>。</p>
-<blockquote>
-<p>栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈互相独立。每个函数都有自己的栈，栈被用来在函数之间传递参数。操作系统在切换线程的时候会自动的切换栈，就是切换SS&#x2F;ESP寄存器。栈空间不需要在高级语言里面显式的分配和释放。</p>
-</blockquote>
-<p><strong>堆</strong>：动态申请的内存空间，就是由 **malloc **分配的内存块，<strong>由程序员控制它的分配和释放</strong>，如果程序执行结束还没有释放，操作系统会自动回收。（是可能会会释放，所以说，用完了一定记得要释放，不然会造成内存泄露）。</p>
-<blockquote>
-<p>堆一般由程序员分配释放，若不释放，程序结束时可能由OS回收。注意这里说是可能，并非一定。所以我想再强调一次，记得要释放！注意它与数据结构中的堆是两回事，分配方式倒是类似于链表。</p>
-<p>当内存不再使用的时候，应使用free()函数将内存块释放掉。</p>
-</blockquote>
-<p><strong>全局区&#x2F;静态存储区（.bss 段和 .data 段）</strong>：存放全局变量和静态变量，程序运行结束操作系统自动释放，在 C 语言中，未初始化的放在 .bss 段中，初始化的放在 .data 段中，C++ 中不再区分了。</p>
-<blockquote>
-<p>解释一下静态变量</p>
-<p>静态变量通过关键字static进行声明。</p>
-<p>经static修饰过后的变量或者函数的作用域会发生变化。该变量存储在数据段上，可以改变变量的作用域和生命周期。</p>
-<p><strong>全局静态变量</strong></p>
-<p>在全局变量前面加上关键词static，全局变量就被定义成一个全局静态变量</p>
-<p>（1）内存中的位置：静态存储区（静态存储区在整个程序运行期间都存在）</p>
-<p>（2）初始化：未经初始化的全局静态变量会被程序自动初始化为0</p>
-<p>（3）作用域：全局静态变量在声明他的文件之外是不可见的。准确地讲从定义之处开始到文件结尾。</p>
-<p><strong>局部静态变量</strong></p>
-<p>在局部变量前面加上关键词static，局部变量就被定义成一个局部静态变量。</p>
-<p>（1）内存中的位置：静态存储区</p>
-<p>（2）初始化：未经初始化的局部静态变量会被程序自动初始化为0（自动对象的值是任意的，除非他被显示初始化）</p>
-<p>（3）作用域：作用域仍为局部作用域，当定义它的函数或者语句块结束的时候，作用域随之结束。</p>
-<p><strong>C语言中使用静态函数的好处</strong></p>
-<p>（1）静态函数会被自动分配在一个一直使用的存储区，直到退出程序，<strong>避免了调用函数的压栈出栈</strong>，速度快很多。</p>
-<p>（2）static指函数的作用域仅局限于本文件。不<strong>用担心自己定义的函数是否会与其他文件的函数同名</strong></p>
-</blockquote>
-<p><strong>常量存储区（.data 段）</strong>：存放的是<strong>常量，不允许修改</strong>，程序运行结束自动释放。<br><strong>代码区（.text 段）</strong>：<strong>存放代码，不允许修改</strong>，但可以执行。编译后的二进制文件存放在这里。<br>说明：</p>
-<p>从操作系统的本身来讲，以上存储区在内存中的分布是如下形式(从低地址到高地址)：</p>
-<p><strong>.text 段 –&gt; .data 段 –&gt; .bss 段 –&gt; 堆 –&gt; unused –&gt; 栈 –&gt; env</strong></p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">说明：C++ 中不再区分初始化和未初始化的全局变量、静态变量的存储区，如果非要区分下述程序标注在了括号中</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> g_var = <span class="number">0</span>; <span class="comment">// g_var 在全局区（.data 段）</span></span><br><span class="line"><span class="type">char</span> *gp_var;  <span class="comment">// gp_var 在全局区（.bss 段）</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> var;                    <span class="comment">// var 在栈区</span></span><br><span class="line">    <span class="type">char</span> *p_var;                <span class="comment">// p_var 在栈区</span></span><br><span class="line">    <span class="type">char</span> arr[] = <span class="string">&quot;abc&quot;</span>;         <span class="comment">// arr 为数组变量，存储在栈区；&quot;abc&quot;为字符串常量，存储在常量区</span></span><br><span class="line">    <span class="type">char</span> *p_var1 = <span class="string">&quot;123456&quot;</span>;    <span class="comment">// p_var1 在栈区；&quot;123456&quot;为字符串常量，存储在常量区</span></span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> s_var = <span class="number">0</span>;       <span class="comment">// s_var 为静态变量，存在静态存储区（.data 段）</span></span><br><span class="line">    p_var = (<span class="type">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>); <span class="comment">// 分配得来的 10 个字节的区域在堆区</span></span><br><span class="line">    <span class="built_in">free</span>(p_var);                <span class="comment">// 因为使用了malloc堆的空间，由程序员自己释放掉</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：力扣 (LeetCode)</span><br><span class="line">链接：https:<span class="comment">//leetcode.cn/leetbook/read/cpp-interview-highlights/e4vkxv/</span></span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
+<p><strong>问题1：堆的内存为什么是不连续的</strong></p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418598.png"></p>
+<p><strong>问题2：堆和栈的不同点</strong></p>
+<p>管理方式：堆-程序员。栈-系统。</p>
+<p>空间大小：堆-不确定。栈-最大容量是系统设定好的。</p>
+<p>生长方向：堆-向高地址扩展，不连续。栈-向低地址扩展，连续。</p>
+<p>分配效率：堆-程序员申请，效率低，容易产生碎片。栈-系统分配，效率高，但是程序员不能控制。</p>
+<p>存放内容：堆-程序员自己申请的内容。栈-局部变量，函数参数等。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202209021418580.png"></p>
 ]]></content>
       <categories>
         <category>C++突击</category>
@@ -406,32 +465,43 @@
       </tags>
   </entry>
   <entry>
-    <title>四星 C++ 变量的区别</title>
-    <url>/2022/09/04/%E5%9B%9B%E6%98%9F%20C++%20%E5%8F%98%E9%87%8F%E7%9A%84%E5%8C%BA%E5%88%AB-2022-08-30/</url>
-    <content><![CDATA[<p>全局变量、局部变量、静态全局变量、静态局部变量的区别<br>C++ 变量根据定义的位置的不同的生命周期，具有不同的作用域，作用域可分为 6 种：全局作用域，局部作用域，语句作用域，类作用域，命名空间作用域和文件作用域。</p>
+    <title>五星 C++ 内存管理</title>
+    <url>/2022/09/01/%E4%BA%94%E6%98%9FC++%20%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%20-2022-08-29/</url>
+    <content><![CDATA[<p>C++ 内存分区：<strong>栈、堆、全局&#x2F;静态存储区、常量存储区、代码区</strong>。</p>
 <span id="more"></span>
-<p>从作用域看：</p>
-<p><strong>全局变量：</strong> 具有全局作用域。全局变量只需在一个源文件中定义，就可以作用于所有的源文件。当然，其他不包含全局变量定义的源文件需要用 extern 关键字再次声明这个全局变量。</p>
-<p><strong>静态全局变量：</strong>具有文件作用域。它与全局变量的区别在于如果程序包含多个文件的话，<strong>它作用于定义它的文件里，不能作用到其它文件里</strong>，即被 static 关键字修饰过的变量具有文件作用域。这样即使<strong>两个不同的源文件都定义了相同名字的静态全局变量，它们也是不同的变量。</strong></p>
-<p><strong>局部变量：</strong>具有局部作用域。它是自动对象（auto），在程序运行期间<strong>不是一直存在</strong>，而是只在函数执行期间存在，函数的一次调用执行结束后，变量被撤销，其所占用的内存也被收回。</p>
-<p><strong>静态局部变量：</strong>具有局部作用域。它只被初始化一次，自从第一次被初始化直到程序运行结束都<strong>一直存在</strong>，<strong>它和全局变量的区别在于全局变量对所有的函数都是可见的，而静态局部变量只对定义自己的函数体始终可见。</strong><br>从分配内存空间看：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//对于数据来说，声明和定义往往是同时存在的，比如下面的一行语句,既定义也声明了。</span></span><br><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="comment">//只声明不定义</span></span><br><span class="line"><span class="keyword">extern</span> <span class="type">int</span> data;</span><br><span class="line"><span class="comment">//对于函数来说，函数声明一般写在头文件中，函数的定义一般写在源文件中；</span></span><br><span class="line"><span class="comment">//声明</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">helloworld</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">//函数定义</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">helloworld</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  std::cout &lt;&lt; <span class="string">&quot;hello world&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//使用变量之前必须声明，声明可以有多次，而定义只能有一次。</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><strong>静态存储区：</strong> 全局变量，静态局部变量，静态全局变量。<br><strong>栈：</strong> 局部变量。</p>
-<p>静态变量和栈变量（存储在栈中的变量）、堆变量（存储在堆中的变量）的区别：<strong>静态变量会被放在程序的静态数据存储区（.data 段）中（静态变量会自动初始化），这样可以在下一次调用的时候还可以保持原来的赋值。</strong> 而栈变量或堆变量不能保证在下一次调用的时候依然保持原来的值。</p>
-<p>静态变量是通过区分存放位置来保证其特殊的生命周期的。栈变量程序会自动释放。堆变量要由程序员自己释放。<br>静态变量和全局变量的区别：静态变量用 static 告知编译器，<strong>自己仅仅在变量的作用范围内可见</strong></p>
+<p><strong>栈</strong>：存放函数的局部变量、函数参数、返回地址等，<strong>由编译器自动分配和释放</strong>。</p>
 <blockquote>
-<p>对于静态全局变量，只在该文件中生效，在其他文件中不生效，因此，在其他文件中，可以定义同名的静态全局变量。</p>
-<p>对于静态局部变量，在局部函数体中，只要被初始化，就会一直存在，不会被释放。</p>
-<p>全局变量，定义后，在其他文件中声明，就可以使用，不能存在同名的定义。并不需要引用头文件文件，但是依然可以在不同文件间共享变量和函数，这一切都是extern的功劳！</p>
+<p>栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈互相独立。每个函数都有自己的栈，栈被用来在函数之间传递参数。操作系统在切换线程的时候会自动的切换栈，就是切换SS&#x2F;ESP寄存器。栈空间不需要在高级语言里面显式的分配和释放。</p>
 </blockquote>
-<p>××××</p>
-<p>**全局变量定义在头文件中会出现什么问题 **</p>
+<p><strong>堆</strong>：动态申请的内存空间，就是由 **malloc **分配的内存块，<strong>由程序员控制它的分配和释放</strong>，如果程序执行结束还没有释放，操作系统会自动回收。（是可能会会释放，所以说，用完了一定记得要释放，不然会造成内存泄露）。</p>
 <blockquote>
-<p>如果在头文件中定义全局变量，当该头文件被多个文件 <code>include</code> 时，该头文件中的全局变量就会被定义多次，导致重复定义，因此不能再头文件中定义全局变量。</p>
+<p>堆一般由程序员分配释放，若不释放，程序结束时可能由OS回收。注意这里说是可能，并非一定。所以我想再强调一次，记得要释放！注意它与数据结构中的堆是两回事，分配方式倒是类似于链表。</p>
+<p>当内存不再使用的时候，应使用free()函数将内存块释放掉。</p>
 </blockquote>
-<p>include一个头文件，相当于把他带包写到了另一个文件，就会被多次定义。</p>
-<p><strong>所以全局变量应该被定义在源文件中。</strong> 其他程序使用，利用extern进行声明。</p>
+<p><strong>全局区&#x2F;静态存储区（.bss 段和 .data 段）</strong>：存放全局变量和静态变量，程序运行结束操作系统自动释放，在 C 语言中，未初始化的放在 .bss 段中，初始化的放在 .data 段中，C++ 中不再区分了。</p>
+<blockquote>
+<p>解释一下静态变量</p>
+<p>静态变量通过关键字static进行声明。</p>
+<p>经static修饰过后的变量或者函数的作用域会发生变化。该变量存储在数据段上，可以改变变量的作用域和生命周期。</p>
+<p><strong>全局静态变量</strong></p>
+<p>在全局变量前面加上关键词static，全局变量就被定义成一个全局静态变量</p>
+<p>（1）内存中的位置：静态存储区（静态存储区在整个程序运行期间都存在）</p>
+<p>（2）初始化：未经初始化的全局静态变量会被程序自动初始化为0</p>
+<p>（3）作用域：全局静态变量在声明他的文件之外是不可见的。准确地讲从定义之处开始到文件结尾。</p>
+<p><strong>局部静态变量</strong></p>
+<p>在局部变量前面加上关键词static，局部变量就被定义成一个局部静态变量。</p>
+<p>（1）内存中的位置：静态存储区</p>
+<p>（2）初始化：未经初始化的局部静态变量会被程序自动初始化为0（自动对象的值是任意的，除非他被显示初始化）</p>
+<p>（3）作用域：作用域仍为局部作用域，当定义它的函数或者语句块结束的时候，作用域随之结束。</p>
+<p><strong>C语言中使用静态函数的好处</strong></p>
+<p>（1）静态函数会被自动分配在一个一直使用的存储区，直到退出程序，<strong>避免了调用函数的压栈出栈</strong>，速度快很多。</p>
+<p>（2）static指函数的作用域仅局限于本文件。不<strong>用担心自己定义的函数是否会与其他文件的函数同名</strong></p>
+</blockquote>
+<p><strong>常量存储区（.data 段）</strong>：存放的是<strong>常量，不允许修改</strong>，程序运行结束自动释放。<br><strong>代码区（.text 段）</strong>：<strong>存放代码，不允许修改</strong>，但可以执行。编译后的二进制文件存放在这里。<br>说明：</p>
+<p>从操作系统的本身来讲，以上存储区在内存中的分布是如下形式(从低地址到高地址)：</p>
+<p><strong>.text 段 –&gt; .data 段 –&gt; .bss 段 –&gt; 堆 –&gt; unused –&gt; 栈 –&gt; env</strong></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">说明：C++ 中不再区分初始化和未初始化的全局变量、静态变量的存储区，如果非要区分下述程序标注在了括号中</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> g_var = <span class="number">0</span>; <span class="comment">// g_var 在全局区（.data 段）</span></span><br><span class="line"><span class="type">char</span> *gp_var;  <span class="comment">// gp_var 在全局区（.bss 段）</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> var;                    <span class="comment">// var 在栈区</span></span><br><span class="line">    <span class="type">char</span> *p_var;                <span class="comment">// p_var 在栈区</span></span><br><span class="line">    <span class="type">char</span> arr[] = <span class="string">&quot;abc&quot;</span>;         <span class="comment">// arr 为数组变量，存储在栈区；&quot;abc&quot;为字符串常量，存储在常量区</span></span><br><span class="line">    <span class="type">char</span> *p_var1 = <span class="string">&quot;123456&quot;</span>;    <span class="comment">// p_var1 在栈区；&quot;123456&quot;为字符串常量，存储在常量区</span></span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> s_var = <span class="number">0</span>;       <span class="comment">// s_var 为静态变量，存在静态存储区（.data 段）</span></span><br><span class="line">    p_var = (<span class="type">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>); <span class="comment">// 分配得来的 10 个字节的区域在堆区</span></span><br><span class="line">    <span class="built_in">free</span>(p_var);                <span class="comment">// 因为使用了malloc堆的空间，由程序员自己释放掉</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">作者：力扣 (LeetCode)</span><br><span class="line">链接：https:<span class="comment">//leetcode.cn/leetbook/read/cpp-interview-highlights/e4vkxv/</span></span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>C++突击</category>
@@ -500,27 +570,32 @@
       </tags>
   </entry>
   <entry>
-    <title>四星 C++ 程序编译过程</title>
-    <url>/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/</url>
-    <content><![CDATA[<p>编译过程可以分为以下三个过程：编译（编译预处理、编译、优化），汇编，链接。<br>其中编译又可以分为编译预处理以及编译优化，就可以划分为四部分。</p>
+    <title>四星 C++ 变量的区别</title>
+    <url>/2022/09/04/%E5%9B%9B%E6%98%9F%20C++%20%E5%8F%98%E9%87%8F%E7%9A%84%E5%8C%BA%E5%88%AB-2022-08-30/</url>
+    <content><![CDATA[<p>全局变量、局部变量、静态全局变量、静态局部变量的区别<br>C++ 变量根据定义的位置的不同的生命周期，具有不同的作用域，作用域可分为 6 种：全局作用域，局部作用域，语句作用域，类作用域，命名空间作用域和文件作用域。</p>
 <span id="more"></span>
+<p>从作用域看：</p>
+<p><strong>全局变量：</strong> 具有全局作用域。全局变量只需在一个源文件中定义，就可以作用于所有的源文件。当然，其他不包含全局变量定义的源文件需要用 extern 关键字再次声明这个全局变量。</p>
+<p><strong>静态全局变量：</strong>具有文件作用域。它与全局变量的区别在于如果程序包含多个文件的话，<strong>它作用于定义它的文件里，不能作用到其它文件里</strong>，即被 static 关键字修饰过的变量具有文件作用域。这样即使<strong>两个不同的源文件都定义了相同名字的静态全局变量，它们也是不同的变量。</strong></p>
+<p><strong>局部变量：</strong>具有局部作用域。它是自动对象（auto），在程序运行期间<strong>不是一直存在</strong>，而是只在函数执行期间存在，函数的一次调用执行结束后，变量被撤销，其所占用的内存也被收回。</p>
+<p><strong>静态局部变量：</strong>具有局部作用域。它只被初始化一次，自从第一次被初始化直到程序运行结束都<strong>一直存在</strong>，<strong>它和全局变量的区别在于全局变量对所有的函数都是可见的，而静态局部变量只对定义自己的函数体始终可见。</strong><br>从分配内存空间看：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//对于数据来说，声明和定义往往是同时存在的，比如下面的一行语句,既定义也声明了。</span></span><br><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="comment">//只声明不定义</span></span><br><span class="line"><span class="keyword">extern</span> <span class="type">int</span> data;</span><br><span class="line"><span class="comment">//对于函数来说，函数声明一般写在头文件中，函数的定义一般写在源文件中；</span></span><br><span class="line"><span class="comment">//声明</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">helloworld</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">//函数定义</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">helloworld</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  std::cout &lt;&lt; <span class="string">&quot;hello world&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//使用变量之前必须声明，声明可以有多次，而定义只能有一次。</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="1、编译预处理"><a href="#1、编译预处理" class="headerlink" title="1、编译预处理"></a>1、编译预处理</h2><p>编译预处理：处理以 # 开头的指令；</p>
-<p>例如：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> </span></span><br><span class="line"><span class="meta">#program once</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="2、编译、优化"><a href="#2、编译、优化" class="headerlink" title="2、编译、优化"></a>2、编译、优化</h2><p>将源码 .cpp 文件翻译成 .s 汇编代码；</p>
-<h2 id="3、汇编"><a href="#3、汇编" class="headerlink" title="3、汇编"></a>3、汇编</h2><p>将汇编代码 .s 翻译成机器指令 .o 文件；</p>
-<h2 id="4、链接"><a href="#4、链接" class="headerlink" title="4、链接"></a>4、链接</h2><p>汇编程序生成的目标文件，即 .o 文件，并不会立即执行，因为可能会出现：.cpp 文件中的函数引用了另一个 .cpp 文件中定义的符号或者调用了某个库文件中的函数。那链接的目的就是将这些文件对应的目标文件连接成一个整体，从而生成可执行的程序 .exe 文件。</p>
-<p><strong>链接包括静态链接和动态链接</strong></p>
-<p><strong>静态链接</strong>：代码从其所在的静态链接库中拷贝到最终的可执行程序中，在该程序被执行时，这些代码会被装入到该进程的虚拟地址空间中。</p>
-<p>通俗的讲：静态链接将程序调用的库一起打包到可执行文件中，这样执行时候就不用调用其他的库，速度快。但是，可能多个文件都链接了同一个库，那么这个库就被打包了很多次，造成了该空间上的浪费。如果这个库更新了的话，整个程序需要重新编译。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038882.png" alt="静态链接"></p>
-<p><strong>动态链接</strong>：代码被放到动态链接库或共享对象的某个目标文件中，链接程序只是在最终的可执行程序中记录了共享对象的名字等一些信息。在程序执行时，动态链接库的全部内容会被映射到运行时相应进行的虚拟地址的空间。</p>
-<p>通俗的讲：动态链接是在程序执行时候才引入的库，因此方便更新。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038200.png" alt="动态链接"></p>
-<p>二者的优缺点：</p>
-<p>静态链接：<strong>浪费空间，</strong>每个可执行程序都会有目标文件的一个副本，这样如果目标文件进行了更新操作，就需要重新进行编译链接生成可执行程序<strong>（更新困难）</strong>；优点就是执行的时候运行<strong>速度快，</strong> 因为可执行程序具备了程序运行的所有内容。<br>动态链接：<strong>节省内存、更新方便</strong>，但是动态链接是在程序运行时，每次执行都需要链接，<strong>相比静态链接会有一定的性能损失。</strong></p>
+<p><strong>静态存储区：</strong> 全局变量，静态局部变量，静态全局变量。<br><strong>栈：</strong> 局部变量。</p>
+<p>静态变量和栈变量（存储在栈中的变量）、堆变量（存储在堆中的变量）的区别：<strong>静态变量会被放在程序的静态数据存储区（.data 段）中（静态变量会自动初始化），这样可以在下一次调用的时候还可以保持原来的赋值。</strong> 而栈变量或堆变量不能保证在下一次调用的时候依然保持原来的值。</p>
+<p>静态变量是通过区分存放位置来保证其特殊的生命周期的。栈变量程序会自动释放。堆变量要由程序员自己释放。<br>静态变量和全局变量的区别：静态变量用 static 告知编译器，<strong>自己仅仅在变量的作用范围内可见</strong></p>
+<blockquote>
+<p>对于静态全局变量，只在该文件中生效，在其他文件中不生效，因此，在其他文件中，可以定义同名的静态全局变量。</p>
+<p>对于静态局部变量，在局部函数体中，只要被初始化，就会一直存在，不会被释放。</p>
+<p>全局变量，定义后，在其他文件中声明，就可以使用，不能存在同名的定义。并不需要引用头文件文件，但是依然可以在不同文件间共享变量和函数，这一切都是extern的功劳！</p>
+</blockquote>
+<p>××××</p>
+<p>**全局变量定义在头文件中会出现什么问题 **</p>
+<blockquote>
+<p>如果在头文件中定义全局变量，当该头文件被多个文件 <code>include</code> 时，该头文件中的全局变量就会被定义多次，导致重复定义，因此不能再头文件中定义全局变量。</p>
+</blockquote>
+<p>include一个头文件，相当于把他带包写到了另一个文件，就会被多次定义。</p>
+<p><strong>所以全局变量应该被定义在源文件中。</strong> 其他程序使用，利用extern进行声明。</p>
 ]]></content>
       <categories>
         <category>C++突击</category>
@@ -584,6 +659,65 @@
 ]]></content>
       <categories>
         <category>c++突击</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>四星 C++ 程序编译过程</title>
+    <url>/2022/08/31/%E5%9B%9B%E6%98%9FC++%20%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%20-%202022-08-28/</url>
+    <content><![CDATA[<p>编译过程可以分为以下三个过程：编译（编译预处理、编译、优化），汇编，链接。<br>其中编译又可以分为编译预处理以及编译优化，就可以划分为四部分。</p>
+<span id="more"></span>
+
+<h2 id="1、编译预处理"><a href="#1、编译预处理" class="headerlink" title="1、编译预处理"></a>1、编译预处理</h2><p>编译预处理：处理以 # 开头的指令；</p>
+<p>例如：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __SOMEFILE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> </span></span><br><span class="line"><span class="meta">#program once</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2、编译、优化"><a href="#2、编译、优化" class="headerlink" title="2、编译、优化"></a>2、编译、优化</h2><p>将源码 .cpp 文件翻译成 .s 汇编代码；</p>
+<h2 id="3、汇编"><a href="#3、汇编" class="headerlink" title="3、汇编"></a>3、汇编</h2><p>将汇编代码 .s 翻译成机器指令 .o 文件；</p>
+<h2 id="4、链接"><a href="#4、链接" class="headerlink" title="4、链接"></a>4、链接</h2><p>汇编程序生成的目标文件，即 .o 文件，并不会立即执行，因为可能会出现：.cpp 文件中的函数引用了另一个 .cpp 文件中定义的符号或者调用了某个库文件中的函数。那链接的目的就是将这些文件对应的目标文件连接成一个整体，从而生成可执行的程序 .exe 文件。</p>
+<p><strong>链接包括静态链接和动态链接</strong></p>
+<p><strong>静态链接</strong>：代码从其所在的静态链接库中拷贝到最终的可执行程序中，在该程序被执行时，这些代码会被装入到该进程的虚拟地址空间中。</p>
+<p>通俗的讲：静态链接将程序调用的库一起打包到可执行文件中，这样执行时候就不用调用其他的库，速度快。但是，可能多个文件都链接了同一个库，那么这个库就被打包了很多次，造成了该空间上的浪费。如果这个库更新了的话，整个程序需要重新编译。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038882.png" alt="静态链接"></p>
+<p><strong>动态链接</strong>：代码被放到动态链接库或共享对象的某个目标文件中，链接程序只是在最终的可执行程序中记录了共享对象的名字等一些信息。在程序执行时，动态链接库的全部内容会被映射到运行时相应进行的虚拟地址的空间。</p>
+<p>通俗的讲：动态链接是在程序执行时候才引入的库，因此方便更新。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208302038200.png" alt="动态链接"></p>
+<p>二者的优缺点：</p>
+<p>静态链接：<strong>浪费空间，</strong>每个可执行程序都会有目标文件的一个副本，这样如果目标文件进行了更新操作，就需要重新进行编译链接生成可执行程序<strong>（更新困难）</strong>；优点就是执行的时候运行<strong>速度快，</strong> 因为可执行程序具备了程序运行的所有内容。<br>动态链接：<strong>节省内存、更新方便</strong>，但是动态链接是在程序运行时，每次执行都需要链接，<strong>相比静态链接会有一定的性能损失。</strong></p>
+]]></content>
+      <categories>
+        <category>C++突击</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C++ 详解多重继承和虚继承、多重继承可能出现的问题</title>
+    <url>/2022/10/09/%E5%A4%9A%E9%87%8D%E7%BB%A7%E6%89%BF%E3%80%81%E8%99%9A%E7%BB%A7%E6%89%BF%20%20%20%20-%20%20%20%202022-10-08/</url>
+    <content><![CDATA[<p>多重继承可能会导致命名冲突和数据冗余，通过虚继承可以解决命名冲突问题。</p>
+<span id="more"></span>
+
+<h2 id="多重继承可能会导致的问题"><a href="#多重继承可能会导致的问题" class="headerlink" title="多重继承可能会导致的问题"></a>多重继承可能会导致的问题</h2><p>多重继承是从派生类从多个基类中继承而来。所以可能会出现<strong>数据冗余</strong>以及<strong>命名冲突</strong>的问题。</p>
+<p>例如   有基类A ，  B、C由A继承而来，D多重继承了A和B，那么D中将会出现命名冲突的问题，因为B、C中都包含基类A 中的成员。这导致出现了菱形继承关系</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202210091501424.png"></p>
+<p><strong>解决方法1：声明出现冲突的成员变量来源于哪个类</strong></p>
+<p>var1是来自基类A的对象，被B、C继承了，D又多重继承了B、C，那么在定义一个D类对象，想要对var1进行赋值的时候，需要声明这个var1是来自继承的哪一个类。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">set_var1</span><span class="params">(<span class="type">int</span> tmp)</span> </span>&#123; Base2::var1 = tmp; &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>解决方法2：虚继承</strong></p>
+<p>使用虚继承的目的：保证存在命名冲突的成员变量在派生类中只保留一份，即使间接基类中的成员在派生类中只保留一份。在菱形继承关系中，间接基类称为虚基类，直接基类和间接基类之间的继承关系称为虚继承。</p>
+<p>实现方式：在继承方式前面加上<code> virtual </code>关键字</p>
+<p>类的继承关系</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202210091501680.png"></p>
+<p>问题：命名冲突的成员变量在派生类中只保留一份，那么所有的类中的成员变量都统一了直接？从原理角度来讲应该是这样。</p>
+<p>详细补充一些内容：<br>虚继承使派生类除了继承基类成员作为自己的成员之外，内部还会有一份内存来保存哪些是基类的成员。当Derive继承Base2和Base3之后，编译器根据虚继承多出来的内存，查到Base2和Base3拥有共同的基类的成员，就不会从Base2和Base3中继承这些，而是直接从共同的基类中继承成员，也就是说，Derive直接继承base的成员，然后再继承Base2和Base3各自新增的成员。这样，Derive就不会继承两份内存。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 间接基类，即虚基类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base1</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> var1;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 直接基类 </span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base2</span> : <span class="keyword">virtual</span> <span class="keyword">public</span> Base1 <span class="comment">// 虚继承</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> var2;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 直接基类 </span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base3</span> : <span class="keyword">virtual</span> <span class="keyword">public</span> Base1 <span class="comment">// 虚继承</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> var3;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 派生类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derive</span> : <span class="keyword">public</span> Base2, <span class="keyword">public</span> Base3</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">set_var1</span><span class="params">(<span class="type">int</span> tmp)</span> </span>&#123; var1 = tmp; &#125; </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">set_var2</span><span class="params">(<span class="type">int</span> tmp)</span> </span>&#123; var2 = tmp; &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">set_var3</span><span class="params">(<span class="type">int</span> tmp)</span> </span>&#123; var3 = tmp; &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">set_var4</span><span class="params">(<span class="type">int</span> tmp)</span> </span>&#123; var4 = tmp; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> var4;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Derive d;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>C++突击</category>
       </categories>
       <tags>
         <tag>c++</tag>
@@ -845,6 +979,66 @@
       </tags>
   </entry>
   <entry>
+    <title>视觉SLAM十四讲-第二讲：初识SLAM</title>
+    <url>/2022/08/26/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E4%B9%8B%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
+    <content><![CDATA[<p>本文主要介绍视觉SLAM十四讲中第二讲的关键内容。</p>
+<span id="more"></span>
+<h2 id="第二讲：初识SLAM"><a href="#第二讲：初识SLAM" class="headerlink" title="第二讲：初识SLAM"></a>第二讲：初识SLAM</h2><p>一类传感器是<strong>携带于机器人本体上</strong>的，例如机器人的轮式编码器、相机、激光等等 ——通过间接测量数据推算位置，好处是对环境没有提出要求，适用于位置环境。</p>
+<p>一类是<strong>安装于环境中</strong>的，例如前面讲的导轨、二维码标志等等。   —— 约束了外界环境，限制了使用范围</p>
+<blockquote>
+<p>📌</p>
+<p><strong>单目相机</strong>是三维空间的二维投影，因此，如果想恢复三维结构，必须移动相机的视角。</p>
+<p>因此，<strong>单目相机平移之后才能计算深度，并且无法确定真实尺度</strong>，问题的本质在于通过单张图像无法确定深度。</p>
+</blockquote>
+<blockquote>
+<p>📌<strong>双目相机</strong>和<strong>深度相机</strong>，目的在于通过某种手段测量物体距离我们的距离，回复距离信息，因此场景的三维结构可以通过单张图线回复，也就消除了尺度不确定性。</p>
+<p>双目相机测量到的深度范围与基线相关。基线距离越大，能够测量到的就越远</p>
+<p><strong>双目或多目相机的缺点</strong>是配置与标定均较为复杂，其深度量程和精度受双目的基线与分辨率限制，而且视差的计算非常消耗计算资源</p>
+<p><strong>深度相机</strong>（又称 RGB-D 相机)右开始兴起的一种相机，它最大的特点是可以通过红外结构光或 Time-of-Flight（ToF）原理，像激光传感器那样，通过主动向物体发射光并接收返回的光，测出物体离相机的距离。<strong>区别于双目相机是采用计算的方式获得深度，深度相机是通过物理方式，避免了大量的计算。</strong></p>
+</blockquote>
+<p>视觉里程计只计算相邻时刻的运动，而和再往前的过去的信息没有关联。仅通过视觉里程计估计轨迹，将不可避免的出现累积漂移。每次估计都会有一定的误差，由于里程计只估计相邻时刻的运动，先前时刻的误差将会传递到下一时刻，导致一段时间后估计的轨迹不再准确。</p>
+<p>后端优化主要指处理 SLAM 过程中噪声的问题。后端优化要考虑的问题，就是如何从这些带有噪声的数据中，估计整个系统的状态，以及这个状态估计的不确定性有多大——这称为最大后验概率估（Maximum-a-Posteriori，MAP）。</p>
+<p>为了实现回环检测，我们需要让机器人具有识别曾到达过的场景的能力。</p>
+<blockquote>
+<p>📌<strong>SLAM问题的数学表述</strong></p>
+<p><img data-src="https://s2.loli.net/2022/08/26/HR8BbFdckGSAUpP.png" alt="SLAM运动和观测方程.png"></p>
+<p>方程1是运动方程，方程2是观测方程</p>
+<p>其中uk代表传感器输入，z代表传感器观测，y代表路标。</p>
+<p>运动方程:  相机是六自由度姿态，两次位姿之间的关系相差一个旋转矩阵。</p>
+<p>观测方程：z是在xk位置观测到yj所产生的观测数据。例如，在xk看到一个特征点，获得他的像素坐标[u,v]，由三维空间点获得像素坐标，这是<strong>相机模型。</strong></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>视觉SLAM</category>
+      </categories>
+      <tags>
+        <tag>SLAM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决typora提示:This beta version of Typora is expired</title>
+    <url>/2022/08/27/%E8%A7%A3%E5%86%B3typora%E6%8F%90%E7%A4%BAThis%20beta%20version%20of%20Typora%20is%20expired/</url>
+    <content><![CDATA[<p>解决typora提示This beta version of Typora is expired, please download and install a newer version<br>自从typora付费之后也没有怎么使用，后来做git仓库+picgo+typora联动的时候，再次打开typora，弹出了以下窗口：</p>
+<span id="more"></span>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271020322.png" alt="ERROR提示"></p>
+<p>我重新下载了付费版本的typora然后然后开启了15天尝鲜。但是我发现之后再想用typora打开md文档的时候依然会出现这个提示框，并且无论是点击确定还是×掉都依然会跳转到typora的安装界面。</p>
+<p>这个错误提示大概的意思就是beta版本的typora已经过，需要下载最新版本。</p>
+<p>在网上查找了一圈解决办法，目前通过修改注册表解决了我的问题。</p>
+<p>以下是解决步骤：</p>
+<p>1、win+r 打开运行窗口 &amp;#x20;<br>2、在搜索栏输入regedit，回车后打开注册表 &amp;#x20;<br>3、在注册表中找到：计算机\HKEY_CURRENT_USER\Software\Typora &amp;#x20;<br>4、鼠标右键Typora，选择权限 &amp;#x20;<br>5、选择Administraors，将下面的权限选择为拒绝</p>
+<p>点击应用的时候可能会出现提醒，点确定就行了。最后保存设置。</p>
+<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271021324.png" alt="修改typora权限"></p>
+<p>6、重新打开typora，就可以正常应用了。</p>
+<p>以上就是问题的解决方法。</p>
+]]></content>
+      <categories>
+        <category>一些奇奇怪怪的问题之windows</category>
+      </categories>
+      <tags>
+        <tag>typora</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>c++ 面向对象的三大特性详解—封装、继承、多态</title>
     <url>/2022/09/20/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7%20%20%20%20-%20%20%20%202022-09-09/</url>
     <content><![CDATA[<p>面向对象：对象是指具体的某一个事物，这些事物的抽象就是类，类中包含数据（成员变量）和动作（成员方法）。</p>
@@ -903,63 +1097,21 @@
       </tags>
   </entry>
   <entry>
-    <title>视觉SLAM十四讲-第二讲：初识SLAM</title>
-    <url>/2022/08/26/%E8%A7%86%E8%A7%89SLAM%E5%8D%81%E5%9B%9B%E8%AE%B2%E4%B9%8B%E7%AC%AC%E4%BA%8C%E8%AE%B2/</url>
-    <content><![CDATA[<p>本文主要介绍视觉SLAM十四讲中第二讲的关键内容。</p>
+    <title>C++ 队列和栈的概念、常用函数总结，方便刷题</title>
+    <url>/2022/10/09/%E9%98%9F%E5%88%97%E5%92%8C%E6%A0%88%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<p>解析队列与栈的概念，总结常用函数，方便LeetCode进行刷题。</p>
 <span id="more"></span>
-<h2 id="第二讲：初识SLAM"><a href="#第二讲：初识SLAM" class="headerlink" title="第二讲：初识SLAM"></a>第二讲：初识SLAM</h2><p>一类传感器是<strong>携带于机器人本体上</strong>的，例如机器人的轮式编码器、相机、激光等等 ——通过间接测量数据推算位置，好处是对环境没有提出要求，适用于位置环境。</p>
-<p>一类是<strong>安装于环境中</strong>的，例如前面讲的导轨、二维码标志等等。   —— 约束了外界环境，限制了使用范围</p>
-<blockquote>
-<p>📌</p>
-<p><strong>单目相机</strong>是三维空间的二维投影，因此，如果想恢复三维结构，必须移动相机的视角。</p>
-<p>因此，<strong>单目相机平移之后才能计算深度，并且无法确定真实尺度</strong>，问题的本质在于通过单张图像无法确定深度。</p>
-</blockquote>
-<blockquote>
-<p>📌<strong>双目相机</strong>和<strong>深度相机</strong>，目的在于通过某种手段测量物体距离我们的距离，回复距离信息，因此场景的三维结构可以通过单张图线回复，也就消除了尺度不确定性。</p>
-<p>双目相机测量到的深度范围与基线相关。基线距离越大，能够测量到的就越远</p>
-<p><strong>双目或多目相机的缺点</strong>是配置与标定均较为复杂，其深度量程和精度受双目的基线与分辨率限制，而且视差的计算非常消耗计算资源</p>
-<p><strong>深度相机</strong>（又称 RGB-D 相机)右开始兴起的一种相机，它最大的特点是可以通过红外结构光或 Time-of-Flight（ToF）原理，像激光传感器那样，通过主动向物体发射光并接收返回的光，测出物体离相机的距离。<strong>区别于双目相机是采用计算的方式获得深度，深度相机是通过物理方式，避免了大量的计算。</strong></p>
-</blockquote>
-<p>视觉里程计只计算相邻时刻的运动，而和再往前的过去的信息没有关联。仅通过视觉里程计估计轨迹，将不可避免的出现累积漂移。每次估计都会有一定的误差，由于里程计只估计相邻时刻的运动，先前时刻的误差将会传递到下一时刻，导致一段时间后估计的轨迹不再准确。</p>
-<p>后端优化主要指处理 SLAM 过程中噪声的问题。后端优化要考虑的问题，就是如何从这些带有噪声的数据中，估计整个系统的状态，以及这个状态估计的不确定性有多大——这称为最大后验概率估（Maximum-a-Posteriori，MAP）。</p>
-<p>为了实现回环检测，我们需要让机器人具有识别曾到达过的场景的能力。</p>
-<blockquote>
-<p>📌<strong>SLAM问题的数学表述</strong></p>
-<p><img data-src="https://s2.loli.net/2022/08/26/HR8BbFdckGSAUpP.png" alt="SLAM运动和观测方程.png"></p>
-<p>方程1是运动方程，方程2是观测方程</p>
-<p>其中uk代表传感器输入，z代表传感器观测，y代表路标。</p>
-<p>运动方程:  相机是六自由度姿态，两次位姿之间的关系相差一个旋转矩阵。</p>
-<p>观测方程：z是在xk位置观测到yj所产生的观测数据。例如，在xk看到一个特征点，获得他的像素坐标[u,v]，由三维空间点获得像素坐标，这是<strong>相机模型。</strong></p>
-</blockquote>
+<h2 id="1、概念"><a href="#1、概念" class="headerlink" title="1、概念"></a>1、概念</h2><h3 id="1-1-队列"><a href="#1-1-队列" class="headerlink" title="1.1 队列"></a>1.1 队列</h3><p>队列就像是排队，向一个左通右通的容器，先进来的先出去，后进来的后出去；</p>
+<h3 id="1-2-栈"><a href="#1-2-栈" class="headerlink" title="1.2 栈"></a>1.2 栈</h3><p>栈就像瓶子， 先进去的后出来，后进去的先出来</p>
+<h2 id="2、常用函数"><a href="#2、常用函数" class="headerlink" title="2、常用函数"></a>2、常用函数</h2><h3 id="2-1-队列"><a href="#2-1-队列" class="headerlink" title="2.1 队列"></a>2.1 队列</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">queue.<span class="built_in">push</span>(); <span class="comment">// 向队列的末尾加入元素</span></span><br><span class="line">queue.<span class="built_in">pop</span>();  <span class="comment">//将队列头部的元素弹出，但没有返回值</span></span><br><span class="line">queue.<span class="built_in">front</span>(); <span class="comment">//返回队列头部的元素，即最早进来的元素</span></span><br><span class="line">queue.<span class="built_in">back</span>();  <span class="comment">//返回队列尾部的元素，即最新进来的元素</span></span><br><span class="line">queue.<span class="built_in">empty</span>(); <span class="comment">//返回队列是否为空</span></span><br><span class="line">queue.<span class="built_in">size</span>();  <span class="comment">//返回队列的大小</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-栈"><a href="#2-2-栈" class="headerlink" title="2.2 栈"></a>2.2 栈</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">stack.<span class="built_in">push</span>(); <span class="comment">//向栈中压如元素</span></span><br><span class="line">stack.<span class="built_in">pop</span>(); <span class="comment">// 将栈中最新的元素弹出去，并且返回栈顶的元素</span></span><br><span class="line">stack.<span class="built_in">peek</span>(); <span class="comment">//返回栈顶的元素，但不弹出该元素</span></span><br><span class="line">stack.<span class="built_in">top</span>(); <span class="comment">//返回栈顶的元素</span></span><br><span class="line">stack.<span class="built_in">size</span>();<span class="comment">//返回栈内元素个数 </span></span><br><span class="line">stack.<span class="built_in">empty</span>();<span class="comment">//判断是否为空</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>视觉SLAM</category>
+        <category>C++常用知识</category>
       </categories>
       <tags>
-        <tag>SLAM</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>解决typora提示:This beta version of Typora is expired</title>
-    <url>/2022/08/27/%E8%A7%A3%E5%86%B3typora%E6%8F%90%E7%A4%BAThis%20beta%20version%20of%20Typora%20is%20expired/</url>
-    <content><![CDATA[<p>解决typora提示This beta version of Typora is expired, please download and install a newer version<br>自从typora付费之后也没有怎么使用，后来做git仓库+picgo+typora联动的时候，再次打开typora，弹出了以下窗口：</p>
-<span id="more"></span>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271020322.png" alt="ERROR提示"></p>
-<p>我重新下载了付费版本的typora然后然后开启了15天尝鲜。但是我发现之后再想用typora打开md文档的时候依然会出现这个提示框，并且无论是点击确定还是×掉都依然会跳转到typora的安装界面。</p>
-<p>这个错误提示大概的意思就是beta版本的typora已经过，需要下载最新版本。</p>
-<p>在网上查找了一圈解决办法，目前通过修改注册表解决了我的问题。</p>
-<p>以下是解决步骤：</p>
-<p>1、win+r 打开运行窗口 &amp;#x20;<br>2、在搜索栏输入regedit，回车后打开注册表 &amp;#x20;<br>3、在注册表中找到：计算机\HKEY_CURRENT_USER\Software\Typora &amp;#x20;<br>4、鼠标右键Typora，选择权限 &amp;#x20;<br>5、选择Administraors，将下面的权限选择为拒绝</p>
-<p>点击应用的时候可能会出现提醒，点确定就行了。最后保存设置。</p>
-<p><img data-src="https://raw.githubusercontent.com/NatureLan-sudo/tuchuang/main/img/202208271021324.png" alt="修改typora权限"></p>
-<p>6、重新打开typora，就可以正常应用了。</p>
-<p>以上就是问题的解决方法。</p>
-]]></content>
-      <categories>
-        <category>一些奇奇怪怪的问题之windows</category>
-      </categories>
-      <tags>
-        <tag>typora</tag>
+        <tag>c++</tag>
       </tags>
   </entry>
 </search>
